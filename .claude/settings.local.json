@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx:*)",
+      "Bash(cp -r /c/Users/wquar/myspace-clone-temp/* /c/Users/wquar/myspace-clone/)",
+      "Bash(cp -r /c/Users/wquar/myspace-clone-temp/.* /c/Users/wquar/myspace-clone/)",
+      "Bash(rm -rf /c/Users/wquar/myspace-clone-temp)",
+      "Bash(cp /c/Users/wquar/myspace-clone-temp/package.json /c/Users/wquar/myspace-clone/)",
+      "Bash(cp /c/Users/wquar/myspace-clone-temp/package-lock.json /c/Users/wquar/myspace-clone/)",
+      "Bash(cp /c/Users/wquar/myspace-clone-temp/postcss.config.mjs /c/Users/wquar/myspace-clone/)",
+      "Bash(cp /c/Users/wquar/myspace-clone-temp/tsconfig.json /c/Users/wquar/myspace-clone/)",
+      "Bash(cp /c/Users/wquar/myspace-clone-temp/.gitignore /c/Users/wquar/myspace-clone/)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
