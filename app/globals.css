@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "MySpaceFont";
+  font-family: "VybeFont";
   src: local("Trebuchet MS"), local("Verdana"), local("Arial");
 }
 
@@ -50,7 +50,7 @@ a:hover {
   color: var(--accent);
 }
 
-/* MySpace-style section headers */
+/* Vybe section headers */
 .ms-section-header {
   background: linear-gradient(180deg, #4a86b8 0%, #2a5f8f 100%);
   color: white;
@@ -67,14 +67,14 @@ a:hover {
   }
 }
 
-/* MySpace-style panels */
+/* Vybe panels */
 .ms-panel {
   border: 1px solid #6699cc;
   background: white;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* MySpace-style buttons — mobile-friendly tap targets */
+/* Vybe buttons — mobile-friendly tap targets */
 .ms-btn-primary {
   background: linear-gradient(180deg, #4a86b8 0%, #2a5f8f 100%);
   color: white;

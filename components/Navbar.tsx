@@ -26,7 +26,7 @@ export default function Navbar({ username }: NavbarProps) {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 no-underline">
           <span className="text-2xl font-bold tracking-tight text-white drop-shadow-[1px_1px_0px_rgba(0,0,0,0.3)] sm:text-3xl">
-            My<span className="text-[#ffcc00]">Space</span>
+            Vy<span className="text-[#ffcc00]">be</span>
           </span>
         </Link>
 
@@ -131,7 +131,7 @@ export default function Navbar({ username }: NavbarProps) {
 
       {/* Tagline — hidden on very small screens */}
       <div className="hidden border-t border-white/20 py-0.5 text-center text-[10px] text-white/60 sm:block">
-        a place for friends
+        express yourself. connect for real.
       </div>
     </nav>
   );

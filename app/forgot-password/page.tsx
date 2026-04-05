@@ -35,9 +35,9 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-sm sm:max-w-md">
         <div className="mb-5 text-center sm:mb-6">
           <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)] sm:text-5xl">
-            My<span className="text-[#ffcc00]">Space</span>
+            Vy<span className="text-[#ffcc00]">be</span>
           </h1>
-          <p className="mt-1 text-xs text-[#8aaccf] sm:text-sm">a place for friends</p>
+          <p className="mt-1 text-xs text-[#8aaccf] sm:text-sm">express yourself. connect for real.</p>
         </div>
 
         <div className="ms-panel overflow-hidden rounded">
@@ -104,7 +104,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <p className="mt-4 text-center text-[10px] text-[#5577aa]">
-          &copy; 2003-2026 MySpace Clone. All rights reserved.
+          &copy; 2026 Vybe. All rights reserved.
         </p>
       </div>
     </div>

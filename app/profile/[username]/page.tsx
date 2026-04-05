@@ -86,10 +86,10 @@ export default async function ProfilePage({
         {/* Profile header banner */}
         <div className="mb-3 overflow-hidden rounded border border-[#6699cc] bg-gradient-to-r from-[#2a5f8f] to-[#4a86b8] p-3 text-white shadow-md sm:mb-4 sm:p-4">
           <h1 className="text-lg font-bold drop-shadow-[1px_1px_0px_rgba(0,0,0,0.3)] sm:text-2xl">
-            {typedProfile.display_name || typedProfile.username}&apos;s Space
+            {typedProfile.display_name || typedProfile.username}&apos;s Vybe
           </h1>
           <p className="text-[10px] text-white/70 sm:text-xs">
-            myspace.com/{typedProfile.username}
+            vybe.social/{typedProfile.username}
           </p>
         </div>
 
@@ -119,7 +119,7 @@ export default async function ProfilePage({
 
         {/* Footer */}
         <div className="mt-4 text-center text-[10px] text-[#6688aa] sm:mt-6">
-          &copy; 2003-2026 MySpace Clone. All rights reserved.
+          &copy; 2026 Vybe. All rights reserved.
         </div>
       </div>
     </div>

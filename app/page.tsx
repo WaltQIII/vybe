@@ -118,9 +118,7 @@ export default async function HomePage() {
 
         {/* Footer */}
         <div className="mt-4 text-center text-[10px] text-[#6688aa] sm:mt-6">
-          &copy; 2003-2026 MySpace Clone. All rights reserved.
-          <br />
-          <span className="italic">The internet was better in 2005.</span>
+          &copy; 2026 Vybe. All rights reserved.
         </div>
       </div>
     </div>

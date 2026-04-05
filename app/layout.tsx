@@ -18,8 +18,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "MySpace Clone",
-  description: "A nostalgic MySpace-inspired social network",
+  title: "Vybe",
+  description: "Express yourself. Connect for real.",
 };
 
 export default function RootLayout({
