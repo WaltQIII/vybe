@@ -13,18 +13,18 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
       <div className="ms-section-header">
         {profile.display_name || profile.username}&apos;s Profile
       </div>
-      <div className="p-4">
-        <div className="mb-4 text-center">
+      <div className="p-3 sm:p-4">
+        <div className="mb-3 text-center sm:mb-4">
           <Image
             src={avatarUrl}
             alt={profile.display_name || profile.username}
             width={150}
             height={150}
-            className="mx-auto rounded border-2 border-[#6699cc] object-cover shadow-md"
+            className="mx-auto h-[120px] w-[120px] rounded border-2 border-[#6699cc] object-cover shadow-md sm:h-[150px] sm:w-[150px]"
           />
         </div>
 
-        <h1 className="text-center text-xl font-bold text-[#003366]">
+        <h1 className="text-center text-lg font-bold text-[#003366] sm:text-xl">
           {profile.display_name || profile.username}
         </h1>
         <p className="text-center text-xs text-[#6688aa]">@{profile.username}</p>
@@ -36,7 +36,7 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
         )}
 
         {profile.bio && (
-          <p className="mt-3 text-center text-xs text-[#333]">{profile.bio}</p>
+          <p className="mt-3 text-center text-xs text-[#333] sm:text-sm">{profile.bio}</p>
         )}
 
         <div className="mt-3 border-t border-[#ddd] pt-2 text-center text-[10px] text-[#999]">
@@ -51,7 +51,7 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
       {profile.about_me && (
         <>
           <div className="ms-section-header">About Me</div>
-          <div className="whitespace-pre-wrap p-4 text-xs leading-relaxed">
+          <div className="whitespace-pre-wrap p-3 text-xs leading-relaxed sm:p-4 sm:text-sm">
             {profile.about_me}
           </div>
         </>

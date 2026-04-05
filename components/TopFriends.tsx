@@ -54,7 +54,7 @@ export default function TopFriends({
       <div className="ms-section-header flex items-center gap-2">
         <span>&#9829;</span> Top Friends ({friends.length}/8)
       </div>
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         {/* Add/Remove friend button for visitors */}
         {currentUserId && !isOwner && (
           <div className="mb-3">
@@ -62,7 +62,7 @@ export default function TopFriends({
               <button
                 onClick={handleRemoveFriend}
                 disabled={loading}
-                className="w-full rounded border border-red-300 bg-red-50 px-3 py-1.5 text-xs text-red-600 hover:bg-red-100 disabled:opacity-50"
+                className="w-full rounded border border-red-300 bg-red-50 px-3 py-2.5 text-xs text-red-600 hover:bg-red-100 disabled:opacity-50 sm:py-1.5"
               >
                 {loading ? "..." : "- Remove from Friends"}
               </button>
@@ -84,19 +84,19 @@ export default function TopFriends({
           </p>
         )}
 
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
           {friends.slice(0, 8).map((friend) => (
             <Link
               key={friend.id}
               href={`/profile/${friend.username}`}
-              className="flex flex-col items-center gap-1 rounded p-1 text-center no-underline hover:bg-[#eef3f7]"
+              className="flex flex-col items-center gap-1 rounded p-1.5 text-center no-underline hover:bg-[#eef3f7] sm:p-1"
             >
               <Image
                 src={friend.avatar_url || "/default-avatar.svg"}
                 alt={friend.display_name || friend.username}
                 width={52}
                 height={52}
-                className="h-[52px] w-[52px] rounded border border-[#6699cc] object-cover"
+                className="h-12 w-12 rounded border border-[#6699cc] object-cover sm:h-[52px] sm:w-[52px]"
               />
               <span className="w-full truncate text-[10px] font-bold text-[#003366]">
                 {friend.display_name || friend.username}

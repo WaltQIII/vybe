@@ -39,6 +39,7 @@ body {
   color: var(--foreground);
   font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
   font-size: 14px;
+  -webkit-text-size-adjust: 100%;
 }
 
 a {
@@ -54,11 +55,16 @@ a:hover {
   background: linear-gradient(180deg, #4a86b8 0%, #2a5f8f 100%);
   color: white;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border: 1px solid #1a4f7f;
+}
+@media (min-width: 640px) {
+  .ms-section-header {
+    font-size: 12px;
+  }
 }
 
 /* MySpace-style panels */
@@ -68,12 +74,12 @@ a:hover {
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* MySpace-style buttons */
+/* MySpace-style buttons — mobile-friendly tap targets */
 .ms-btn-primary {
   background: linear-gradient(180deg, #4a86b8 0%, #2a5f8f 100%);
   color: white;
   border: 1px solid #1a4f7f;
-  padding: 4px 14px;
+  padding: 8px 16px;
   font-size: 12px;
   font-weight: bold;
   cursor: pointer;
@@ -83,12 +89,17 @@ a:hover {
 .ms-btn-primary:hover {
   background: linear-gradient(180deg, #5a96c8 0%, #3a6f9f 100%);
 }
+@media (min-width: 640px) {
+  .ms-btn-primary {
+    padding: 4px 14px;
+  }
+}
 
 .ms-btn-accent {
   background: linear-gradient(180deg, #ff8833 0%, #ff6600 100%);
   color: white;
   border: 1px solid #cc5500;
-  padding: 4px 14px;
+  padding: 8px 16px;
   font-size: 12px;
   font-weight: bold;
   cursor: pointer;
@@ -97,6 +108,31 @@ a:hover {
 }
 .ms-btn-accent:hover {
   background: linear-gradient(180deg, #ff9944 0%, #ff7711 100%);
+}
+@media (min-width: 640px) {
+  .ms-btn-accent {
+    padding: 4px 14px;
+  }
+}
+
+/* Mobile-friendly form inputs */
+.ms-input {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #6699cc;
+  background-color: #f5f8fa;
+  padding: 10px 12px;
+  font-size: 16px; /* prevents iOS zoom */
+  outline: none;
+}
+.ms-input:focus {
+  border-color: #003366;
+}
+@media (min-width: 640px) {
+  .ms-input {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
 }
 
 /* Marquee-style text animation */
@@ -111,12 +147,6 @@ a:hover {
 .ms-marquee span {
   display: inline-block;
   animation: marquee 15s linear infinite;
-}
-
-/* Sparkle cursor trail effect hint */
-@keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.2); }
 }
 
 /* Blink text like the old days */

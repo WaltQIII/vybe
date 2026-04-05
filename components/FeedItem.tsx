@@ -8,15 +8,15 @@ interface FeedItemProps {
 
 export default function FeedItem({ comment }: FeedItemProps) {
   return (
-    <div className="flex gap-3 rounded border border-[#ccdbe6] bg-[#f5f8fa] p-3">
+    <div className="flex gap-2 rounded border border-[#ccdbe6] bg-[#f5f8fa] p-2.5 sm:gap-3 sm:p-3">
       <Image
         src={comment.author?.avatar_url || "/default-avatar.svg"}
         alt={comment.author?.display_name || "User"}
         width={36}
         height={36}
-        className="h-9 w-9 flex-shrink-0 rounded border border-[#6699cc] object-cover"
+        className="h-8 w-8 flex-shrink-0 rounded border border-[#6699cc] object-cover sm:h-9 sm:w-9"
       />
-      <div className="flex-1 text-xs">
+      <div className="min-w-0 flex-1 text-xs sm:text-sm">
         <p>
           <Link
             href={`/profile/${comment.author?.username}`}
@@ -33,7 +33,7 @@ export default function FeedItem({ comment }: FeedItemProps) {
           </Link>
           &apos;s wall:
         </p>
-        <p className="mt-1 text-[#333]">{comment.body}</p>
+        <p className="mt-1 break-words text-[#333]">{comment.body}</p>
         <span className="mt-1 block text-[10px] text-[#999]">
           {new Date(comment.created_at).toLocaleDateString("en-US", {
             month: "short",

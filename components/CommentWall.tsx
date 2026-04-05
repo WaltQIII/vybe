@@ -49,7 +49,7 @@ export default function CommentWall({
       <div className="ms-section-header flex items-center gap-2">
         <span>&#9993;</span> {isOwner ? "My" : ""} Comment Wall ({comments.length})
       </div>
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         {currentUserId && (
           <form onSubmit={handlePost} className="mb-4">
             <textarea
@@ -57,7 +57,7 @@ export default function CommentWall({
               onChange={(e) => setBody(e.target.value)}
               placeholder="Leave a comment on this wall..."
               rows={3}
-              className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+              className="ms-input"
             />
             <button
               type="submit"
@@ -70,8 +70,8 @@ export default function CommentWall({
         )}
 
         {comments.length === 0 && (
-          <div className="rounded border border-dashed border-[#6699cc] bg-[#eef3f7] p-4 text-center">
-            <p className="text-xs text-[#336699]">
+          <div className="rounded border border-dashed border-[#6699cc] bg-[#eef3f7] p-4 text-center sm:p-6">
+            <p className="text-xs text-[#336699] sm:text-sm">
               No comments yet. Be the first to leave one!
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function CommentWall({
           {comments.map((comment, i) => (
             <div
               key={comment.id}
-              className={`flex gap-3 p-3 ${
+              className={`flex gap-2 p-2.5 sm:gap-3 sm:p-3 ${
                 i % 2 === 0 ? "bg-[#f5f8fa]" : "bg-white"
               } ${i < comments.length - 1 ? "border-b border-[#dde6ed]" : ""}`}
             >
@@ -90,36 +90,34 @@ export default function CommentWall({
                 alt={comment.author?.display_name || "User"}
                 width={36}
                 height={36}
-                className="h-9 w-9 flex-shrink-0 rounded border border-[#6699cc] object-cover"
+                className="h-8 w-8 flex-shrink-0 rounded border border-[#6699cc] object-cover sm:h-9 sm:w-9"
               />
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                   <a
                     href={`/profile/${comment.author?.username}`}
-                    className="text-xs font-bold text-[#003366]"
+                    className="text-xs font-bold text-[#003366] sm:text-sm"
                   >
                     {comment.author?.display_name || comment.author?.username}
                   </a>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-[#999]">
-                      {new Date(comment.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                    {isOwner && (
-                      <button
-                        onClick={() => handleDelete(comment.id)}
-                        className="text-[10px] text-red-400 hover:text-red-600"
-                      >
-                        [x]
-                      </button>
-                    )}
-                  </div>
+                  <span className="text-[10px] text-[#999]">
+                    {new Date(comment.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                  {isOwner && (
+                    <button
+                      onClick={() => handleDelete(comment.id)}
+                      className="text-[10px] text-red-400 hover:text-red-600"
+                    >
+                      [x]
+                    </button>
+                  )}
                 </div>
-                <p className="mt-1 text-xs text-[#333]">{comment.body}</p>
+                <p className="mt-1 break-words text-xs text-[#333] sm:text-sm">{comment.body}</p>
               </div>
             </div>
           ))}

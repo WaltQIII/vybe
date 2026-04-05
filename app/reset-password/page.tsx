@@ -47,23 +47,23 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="ms-stars-bg flex min-h-screen items-center justify-center bg-[#1a2a3a]">
-      <div className="w-full max-w-md px-4">
-        <div className="mb-6 text-center">
-          <h1 className="text-5xl font-bold tracking-tight text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)]">
+    <div className="ms-stars-bg flex min-h-screen items-center justify-center bg-[#1a2a3a] px-4 py-8">
+      <div className="w-full max-w-sm sm:max-w-md">
+        <div className="mb-5 text-center sm:mb-6">
+          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)] sm:text-5xl">
             My<span className="text-[#ffcc00]">Space</span>
           </h1>
-          <p className="mt-1 text-sm text-[#8aaccf]">a place for friends</p>
+          <p className="mt-1 text-xs text-[#8aaccf] sm:text-sm">a place for friends</p>
         </div>
 
         <div className="ms-panel overflow-hidden rounded">
           <div className="ms-section-header text-center">
             Set New Password
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {done ? (
               <div>
-                <div className="mb-4 rounded border border-green-300 bg-green-50 p-4 text-xs text-green-700">
+                <div className="mb-4 rounded border border-green-300 bg-green-50 p-3 text-xs text-green-700 sm:p-4">
                   Password updated! Redirecting you to the home page...
                 </div>
                 <p className="text-center text-xs">
@@ -80,7 +80,7 @@ export default function ResetPasswordPage() {
                   </div>
                 )}
 
-                <form onSubmit={handleUpdate} className="space-y-4">
+                <form onSubmit={handleUpdate} className="space-y-3 sm:space-y-4">
                   <div>
                     <label className="mb-1 block text-xs font-bold text-[#003366]">
                       New Password
@@ -91,7 +91,7 @@ export default function ResetPasswordPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={6}
-                      className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+                      className="ms-input"
                     />
                   </div>
 
@@ -105,14 +105,14 @@ export default function ResetPasswordPage() {
                       onChange={(e) => setConfirm(e.target.value)}
                       required
                       minLength={6}
-                      className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+                      className="ms-input"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="ms-btn-primary w-full rounded py-2 disabled:opacity-50"
+                    className="ms-btn-primary w-full rounded py-2.5 disabled:opacity-50 sm:py-2"
                   >
                     {loading ? "Updating..." : "Update Password"}
                   </button>

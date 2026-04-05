@@ -51,15 +51,15 @@ export default function AvatarUpload({
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:gap-4">
       <Image
         src={currentUrl || "/default-avatar.svg"}
         alt="Avatar"
         width={72}
         height={72}
-        className="rounded border-2 border-[#6699cc] object-cover shadow"
+        className="h-20 w-20 rounded border-2 border-[#6699cc] object-cover shadow sm:h-[72px] sm:w-[72px]"
       />
-      <div>
+      <div className="text-center sm:text-left">
         <label className="ms-btn-primary inline-block cursor-pointer rounded">
           {uploading ? "Uploading..." : "Change Photo"}
           <input

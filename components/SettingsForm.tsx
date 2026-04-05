@@ -54,7 +54,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
     <form onSubmit={handleSave}>
       <div className="ms-panel overflow-hidden rounded">
         <div className="ms-section-header">Profile Photo</div>
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <AvatarUpload
             userId={profile.id}
             currentUrl={avatarUrl}
@@ -63,9 +63,9 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         </div>
       </div>
 
-      <div className="ms-panel mt-4 overflow-hidden rounded">
+      <div className="ms-panel mt-3 overflow-hidden rounded sm:mt-4">
         <div className="ms-section-header">Basic Info</div>
-        <div className="space-y-4 p-4">
+        <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
           <div>
             <label className="mb-1 block text-xs font-bold text-[#003366]">
               Display Name
@@ -74,7 +74,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+              className="ms-input"
             />
           </div>
 
@@ -87,7 +87,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
               onChange={(e) => setBio(e.target.value)}
               maxLength={300}
               rows={2}
-              className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+              className="ms-input"
             />
           </div>
 
@@ -100,28 +100,28 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
               value={mood}
               onChange={(e) => setMood(e.target.value)}
               placeholder='e.g. "feeling creative ✨"'
-              className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+              className="ms-input"
             />
           </div>
         </div>
       </div>
 
-      <div className="ms-panel mt-4 overflow-hidden rounded">
+      <div className="ms-panel mt-3 overflow-hidden rounded sm:mt-4">
         <div className="ms-section-header">About Me</div>
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <textarea
             value={aboutMe}
             onChange={(e) => setAboutMe(e.target.value)}
-            rows={8}
+            rows={6}
             placeholder="Tell the world about yourself..."
-            className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+            className="ms-input sm:[rows:8]"
           />
         </div>
       </div>
 
-      <div className="ms-panel mt-4 overflow-hidden rounded">
+      <div className="ms-panel mt-3 overflow-hidden rounded sm:mt-4">
         <div className="ms-section-header">Customize Profile</div>
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <label className="mb-1 block text-xs font-bold text-[#003366]">
             Background Color
           </label>
@@ -130,11 +130,11 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
               type="color"
               value={bgColor}
               onChange={(e) => setBgColor(e.target.value)}
-              className="h-8 w-12 cursor-pointer rounded border border-[#6699cc]"
+              className="h-10 w-14 cursor-pointer rounded border border-[#6699cc] sm:h-8 sm:w-12"
             />
             <span className="text-xs text-[#666]">{bgColor}</span>
             <div
-              className="h-8 flex-1 rounded border border-[#6699cc]"
+              className="h-10 flex-1 rounded border border-[#6699cc] sm:h-8"
               style={{ backgroundColor: bgColor }}
             />
           </div>
@@ -143,7 +143,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
 
       {message && (
         <div
-          className={`mt-4 rounded border p-3 text-xs ${
+          className={`mt-3 rounded border p-3 text-xs sm:mt-4 sm:text-sm ${
             message.startsWith("Error")
               ? "border-red-300 bg-red-50 text-red-700"
               : "border-green-300 bg-green-50 text-green-700"
@@ -153,18 +153,18 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         </div>
       )}
 
-      <div className="mt-4 flex gap-2">
+      <div className="mt-3 flex flex-col gap-2 sm:mt-4 sm:flex-row">
         <button
           type="submit"
           disabled={saving}
-          className="ms-btn-primary rounded disabled:opacity-50"
+          className="ms-btn-primary w-full rounded disabled:opacity-50 sm:w-auto"
         >
           {saving ? "Saving..." : "Save Profile"}
         </button>
         <button
           type="button"
           onClick={() => router.push(`/profile/${profile.username}`)}
-          className="ms-btn-accent rounded"
+          className="ms-btn-accent w-full rounded sm:w-auto"
         >
           View My Profile
         </button>
