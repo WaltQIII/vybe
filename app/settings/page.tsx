@@ -1,21 +1,13 @@
-import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import SettingsForm from "@/components/SettingsForm";
 import { redirect } from "next/navigation";
 import type { Profile } from "@/lib/types";
 
 export default async function SettingsPage() {
-  const user = await requireAuth();
-  const supabase = await createServerSupabaseClient();
+  await requireAuth();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  // If no profile yet (shouldn't normally happen), redirect to signup
+  const profile = await getProfile();
   if (!profile) redirect("/signup");
 
   const typedProfile = profile as Profile;

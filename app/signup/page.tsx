@@ -45,29 +45,21 @@ export default function SignupPage() {
       return;
     }
 
-    const { data, error: signUpError } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username: username.toLowerCase(),
+          display_name: displayName || username,
+        },
+      },
     });
 
     if (signUpError) {
       setError(signUpError.message);
       setLoading(false);
       return;
-    }
-
-    if (data.user) {
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: data.user.id,
-        username: username.toLowerCase(),
-        display_name: displayName || username,
-      });
-
-      if (profileError) {
-        setError("Account created but profile setup failed. Please try logging in.");
-        setLoading(false);
-        return;
-      }
     }
 
     router.push("/settings");

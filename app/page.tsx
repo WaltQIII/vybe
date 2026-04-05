@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import FeedItem from "@/components/FeedItem";
 import type { Profile, WallComment } from "@/lib/types";
@@ -9,13 +9,7 @@ export default async function HomePage() {
   const user = await requireAuth();
   const supabase = await createServerSupabaseClient();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  const typedProfile = profile as Profile | null;
+  const typedProfile = (await getProfile()) as Profile | null;
 
   // Get friends list
   const { data: friendships } = await supabase

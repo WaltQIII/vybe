@@ -23,7 +23,26 @@ export async function getProfile() {
     .eq("id", user.id)
     .single();
 
-  return profile;
+  if (profile) return profile;
+
+  // Profile missing (e.g. trigger didn't fire during signup) — create it
+  // from the auth metadata that was saved at sign-up time.
+  const meta = user.user_metadata ?? {};
+  const username =
+    meta.username || user.email?.split("@")[0].replace(/[^a-zA-Z0-9_]/g, "_") || user.id.slice(0, 8);
+  const displayName = meta.display_name || username;
+
+  const { data: newProfile } = await supabase
+    .from("profiles")
+    .insert({
+      id: user.id,
+      username,
+      display_name: displayName,
+    })
+    .select()
+    .single();
+
+  return newProfile;
 }
 
 export async function requireAuth() {
