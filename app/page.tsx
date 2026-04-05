@@ -38,60 +38,89 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#c0c0d0]">
+    <div className="min-h-screen bg-[#b4c8d8]">
       <Navbar username={typedProfile?.username} />
 
-      <div className="mx-auto max-w-3xl px-4 py-8">
-        <div className="mb-8 rounded-lg border-2 border-[#003366] bg-white p-6 shadow-md">
-          <h1 className="text-2xl font-bold text-[#003366]">
-            Welcome back, {typedProfile?.display_name || typedProfile?.username}!
-          </h1>
-          {typedProfile?.mood && (
-            <p className="mt-1 text-sm italic text-gray-600">
-              {typedProfile.mood}
-            </p>
-          )}
-          <div className="mt-3 flex gap-3">
-            <Link
-              href={`/profile/${typedProfile?.username}`}
-              className="rounded bg-[#003366] px-4 py-1.5 text-sm font-bold text-white no-underline hover:bg-[#004488]"
-            >
-              View My Profile
-            </Link>
-            <Link
-              href="/settings"
-              className="rounded border border-gray-300 px-4 py-1.5 text-sm no-underline hover:bg-gray-50"
-            >
-              Edit Profile
-            </Link>
+      <div className="mx-auto max-w-3xl px-4 py-6">
+        {/* Welcome banner */}
+        <div className="ms-panel mb-6 overflow-hidden rounded">
+          <div className="ms-section-header">
+            Welcome Back!
+          </div>
+          <div className="p-5">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#4a86b8] to-[#2a5f8f] text-lg font-bold text-white shadow-inner">
+                {(typedProfile?.display_name || typedProfile?.username || "?")[0].toUpperCase()}
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-[#003366]">
+                  Hey there, {typedProfile?.display_name || typedProfile?.username || "friend"}!
+                </h1>
+                {typedProfile?.mood && (
+                  <p className="text-xs italic text-[#666]">
+                    Mood: {typedProfile.mood}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {typedProfile?.username && (
+              <div className="mt-4 flex gap-2">
+                <Link
+                  href={`/profile/${typedProfile.username}`}
+                  className="ms-btn-primary inline-block rounded no-underline"
+                >
+                  View My Profile
+                </Link>
+                <Link
+                  href="/settings"
+                  className="ms-btn-primary inline-block rounded no-underline"
+                >
+                  Edit Profile
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
-        <h2 className="mb-4 text-xl font-bold text-[#003366]">
-          Friend Activity
-        </h2>
-
-        {friendIds.length === 0 && (
-          <div className="rounded-lg border-2 border-[#003366] bg-white p-6 text-center shadow-md">
-            <p className="text-gray-500">
-              You haven&apos;t added any friends yet! Browse profiles and add
-              friends to see their activity here.
-            </p>
+        {/* Friend Activity */}
+        <div className="ms-panel overflow-hidden rounded">
+          <div className="ms-section-header flex items-center gap-2">
+            <span>&#9733;</span> Friend Activity
           </div>
-        )}
+          <div className="p-4">
+            {friendIds.length === 0 && (
+              <div className="rounded border border-dashed border-[#6699cc] bg-[#eef3f7] p-6 text-center">
+                <p className="text-sm text-[#336699]">
+                  You haven&apos;t added any friends yet!
+                </p>
+                <p className="mt-1 text-xs text-[#666]">
+                  Browse profiles and add friends to see their activity here.
+                </p>
+              </div>
+            )}
 
-        {friendIds.length > 0 && feedComments.length === 0 && (
-          <div className="rounded-lg border-2 border-[#003366] bg-white p-6 text-center shadow-md">
-            <p className="text-gray-500">
-              No recent activity from your friends.
-            </p>
+            {friendIds.length > 0 && feedComments.length === 0 && (
+              <div className="rounded border border-dashed border-[#6699cc] bg-[#eef3f7] p-6 text-center">
+                <p className="text-sm text-[#336699]">
+                  No recent activity from your friends yet.
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-3">
+              {feedComments.map((comment) => (
+                <FeedItem key={comment.id} comment={comment} />
+              ))}
+            </div>
           </div>
-        )}
+        </div>
 
-        <div className="space-y-4">
-          {feedComments.map((comment) => (
-            <FeedItem key={comment.id} comment={comment} />
-          ))}
+        {/* Footer */}
+        <div className="mt-6 text-center text-[10px] text-[#6688aa]">
+          &copy; 2003-2026 MySpace Clone. All rights reserved.
+          <br />
+          <span className="italic">The internet was better in 2005.</span>
         </div>
       </div>
     </div>

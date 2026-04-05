@@ -9,46 +9,52 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
   const avatarUrl = profile.avatar_url || "/default-avatar.svg";
 
   return (
-    <div className="rounded-lg border-2 border-[#003366] bg-white p-6 shadow-md">
-      <div className="flex gap-6">
-        <div className="flex-shrink-0">
+    <div className="ms-panel overflow-hidden rounded">
+      <div className="ms-section-header">
+        {profile.display_name || profile.username}&apos;s Profile
+      </div>
+      <div className="p-4">
+        <div className="mb-4 text-center">
           <Image
             src={avatarUrl}
             alt={profile.display_name || profile.username}
             width={150}
             height={150}
-            className="rounded border-2 border-[#003366] object-cover"
+            className="mx-auto rounded border-2 border-[#6699cc] object-cover shadow-md"
           />
         </div>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold text-[#003366]">
-            {profile.display_name || profile.username}
-          </h1>
-          <p className="text-sm text-gray-500">@{profile.username}</p>
 
-          {profile.mood && (
-            <p className="mt-2 text-sm italic text-gray-600">
-              {profile.mood}
-            </p>
-          )}
+        <h1 className="text-center text-xl font-bold text-[#003366]">
+          {profile.display_name || profile.username}
+        </h1>
+        <p className="text-center text-xs text-[#6688aa]">@{profile.username}</p>
 
-          {profile.bio && <p className="mt-3 text-sm">{profile.bio}</p>}
+        {profile.mood && (
+          <div className="mx-auto mt-2 max-w-fit rounded-full bg-[#eef3f7] px-3 py-1 text-center text-xs italic text-[#336699]">
+            {profile.mood}
+          </div>
+        )}
 
-          <p className="mt-2 text-xs text-gray-400">
-            Member since{" "}
-            {new Date(profile.created_at).toLocaleDateString("en-US", {
-              month: "long",
-              year: "numeric",
-            })}
-          </p>
+        {profile.bio && (
+          <p className="mt-3 text-center text-xs text-[#333]">{profile.bio}</p>
+        )}
+
+        <div className="mt-3 border-t border-[#ddd] pt-2 text-center text-[10px] text-[#999]">
+          Online since{" "}
+          {new Date(profile.created_at).toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+          })}
         </div>
       </div>
 
       {profile.about_me && (
-        <div className="mt-6 border-t pt-4">
-          <h2 className="mb-2 text-lg font-bold text-[#003366]">About Me</h2>
-          <div className="whitespace-pre-wrap text-sm">{profile.about_me}</div>
-        </div>
+        <>
+          <div className="ms-section-header">About Me</div>
+          <div className="whitespace-pre-wrap p-4 text-xs leading-relaxed">
+            {profile.about_me}
+          </div>
+        </>
       )}
     </div>
   );

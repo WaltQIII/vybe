@@ -45,75 +45,85 @@ export default function CommentWall({
   }
 
   return (
-    <div className="rounded-lg border-2 border-[#003366] bg-white p-6 shadow-md">
-      <h2 className="mb-4 text-lg font-bold text-[#003366]">
-        Comment Wall ({comments.length})
-      </h2>
-
-      {currentUserId && (
-        <form onSubmit={handlePost} className="mb-6">
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Leave a comment..."
-            rows={3}
-            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-[#003366] focus:outline-none"
-          />
-          <button
-            type="submit"
-            disabled={posting || !body.trim()}
-            className="mt-2 rounded bg-[#ff6600] px-4 py-1.5 text-sm font-bold text-white hover:bg-[#ff7722] disabled:opacity-50"
-          >
-            {posting ? "Posting..." : "Post Comment"}
-          </button>
-        </form>
-      )}
-
-      {comments.length === 0 && (
-        <p className="text-sm text-gray-500">
-          No comments yet. Be the first to leave one!
-        </p>
-      )}
-
-      <div className="space-y-4">
-        {comments.map((comment) => (
-          <div
-            key={comment.id}
-            className="flex gap-3 border-b border-gray-100 pb-4 last:border-0"
-          >
-            <Image
-              src={comment.author?.avatar_url || "/default-avatar.svg"}
-              alt={comment.author?.display_name || "User"}
-              width={40}
-              height={40}
-              className="h-10 w-10 flex-shrink-0 rounded object-cover"
+    <div className="ms-panel overflow-hidden rounded">
+      <div className="ms-section-header flex items-center gap-2">
+        <span>&#9993;</span> {isOwner ? "My" : ""} Comment Wall ({comments.length})
+      </div>
+      <div className="p-4">
+        {currentUserId && (
+          <form onSubmit={handlePost} className="mb-4">
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              placeholder="Leave a comment on this wall..."
+              rows={3}
+              className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
             />
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <a
-                  href={`/profile/${comment.author?.username}`}
-                  className="text-sm font-bold text-[#003366]"
-                >
-                  {comment.author?.display_name || comment.author?.username}
-                </a>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">
-                    {new Date(comment.created_at).toLocaleDateString()}
-                  </span>
-                  {isOwner && (
-                    <button
-                      onClick={() => handleDelete(comment.id)}
-                      className="text-xs text-red-400 hover:text-red-600"
-                    >
-                      delete
-                    </button>
-                  )}
-                </div>
-              </div>
-              <p className="mt-1 text-sm">{comment.body}</p>
-            </div>
+            <button
+              type="submit"
+              disabled={posting || !body.trim()}
+              className="ms-btn-accent mt-2 rounded disabled:opacity-50"
+            >
+              {posting ? "Posting..." : "Post Comment"}
+            </button>
+          </form>
+        )}
+
+        {comments.length === 0 && (
+          <div className="rounded border border-dashed border-[#6699cc] bg-[#eef3f7] p-4 text-center">
+            <p className="text-xs text-[#336699]">
+              No comments yet. Be the first to leave one!
+            </p>
           </div>
-        ))}
+        )}
+
+        <div className="space-y-0">
+          {comments.map((comment, i) => (
+            <div
+              key={comment.id}
+              className={`flex gap-3 p-3 ${
+                i % 2 === 0 ? "bg-[#f5f8fa]" : "bg-white"
+              } ${i < comments.length - 1 ? "border-b border-[#dde6ed]" : ""}`}
+            >
+              <Image
+                src={comment.author?.avatar_url || "/default-avatar.svg"}
+                alt={comment.author?.display_name || "User"}
+                width={36}
+                height={36}
+                className="h-9 w-9 flex-shrink-0 rounded border border-[#6699cc] object-cover"
+              />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <a
+                    href={`/profile/${comment.author?.username}`}
+                    className="text-xs font-bold text-[#003366]"
+                  >
+                    {comment.author?.display_name || comment.author?.username}
+                  </a>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-[#999]">
+                      {new Date(comment.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                    {isOwner && (
+                      <button
+                        onClick={() => handleDelete(comment.id)}
+                        className="text-[10px] text-red-400 hover:text-red-600"
+                      >
+                        [x]
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-1 text-xs text-[#333]">{comment.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

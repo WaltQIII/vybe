@@ -8,16 +8,16 @@ interface FeedItemProps {
 
 export default function FeedItem({ comment }: FeedItemProps) {
   return (
-    <div className="flex gap-3 rounded-lg border-2 border-[#003366] bg-white p-4 shadow-sm">
+    <div className="flex gap-3 rounded border border-[#ccdbe6] bg-[#f5f8fa] p-3">
       <Image
         src={comment.author?.avatar_url || "/default-avatar.svg"}
         alt={comment.author?.display_name || "User"}
-        width={40}
-        height={40}
-        className="h-10 w-10 flex-shrink-0 rounded object-cover"
+        width={36}
+        height={36}
+        className="h-9 w-9 flex-shrink-0 rounded border border-[#6699cc] object-cover"
       />
-      <div className="flex-1">
-        <p className="text-sm">
+      <div className="flex-1 text-xs">
+        <p>
           <Link
             href={`/profile/${comment.author?.username}`}
             className="font-bold text-[#003366]"
@@ -33,9 +33,15 @@ export default function FeedItem({ comment }: FeedItemProps) {
           </Link>
           &apos;s wall:
         </p>
-        <p className="mt-1 text-sm">{comment.body}</p>
-        <span className="mt-1 block text-xs text-gray-400">
-          {new Date(comment.created_at).toLocaleDateString()}
+        <p className="mt-1 text-[#333]">{comment.body}</p>
+        <span className="mt-1 block text-[10px] text-[#999]">
+          {new Date(comment.created_at).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+          })}
         </span>
       </div>
     </div>

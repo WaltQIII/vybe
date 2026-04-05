@@ -50,59 +50,60 @@ export default function TopFriends({
   }
 
   return (
-    <div className="rounded-lg border-2 border-[#003366] bg-white p-6 shadow-md">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-[#003366]">
-          Top Friends ({friends.length}/8)
-        </h2>
+    <div className="ms-panel overflow-hidden rounded">
+      <div className="ms-section-header flex items-center gap-2">
+        <span>&#9829;</span> Top Friends ({friends.length}/8)
       </div>
+      <div className="p-4">
+        {/* Add/Remove friend button for visitors */}
+        {currentUserId && !isOwner && (
+          <div className="mb-3">
+            {isFriend ? (
+              <button
+                onClick={handleRemoveFriend}
+                disabled={loading}
+                className="w-full rounded border border-red-300 bg-red-50 px-3 py-1.5 text-xs text-red-600 hover:bg-red-100 disabled:opacity-50"
+              >
+                {loading ? "..." : "- Remove from Friends"}
+              </button>
+            ) : (
+              <button
+                onClick={handleAddFriend}
+                disabled={loading}
+                className="ms-btn-accent w-full rounded disabled:opacity-50"
+              >
+                {loading ? "..." : "+ Add to Friends"}
+              </button>
+            )}
+          </div>
+        )}
 
-      {/* Add/Remove friend button for visitors */}
-      {currentUserId && !isOwner && (
-        <div className="mb-4">
-          {isFriend ? (
-            <button
-              onClick={handleRemoveFriend}
-              disabled={loading}
-              className="w-full rounded border border-red-300 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
+        {friends.length === 0 && (
+          <p className="py-2 text-center text-xs text-[#999]">
+            No friends added yet.
+          </p>
+        )}
+
+        <div className="grid grid-cols-4 gap-2">
+          {friends.slice(0, 8).map((friend) => (
+            <Link
+              key={friend.id}
+              href={`/profile/${friend.username}`}
+              className="flex flex-col items-center gap-1 rounded p-1 text-center no-underline hover:bg-[#eef3f7]"
             >
-              {loading ? "..." : "Remove from Friends"}
-            </button>
-          ) : (
-            <button
-              onClick={handleAddFriend}
-              disabled={loading}
-              className="w-full rounded bg-[#ff6600] px-3 py-1.5 text-sm font-bold text-white hover:bg-[#ff7722] disabled:opacity-50"
-            >
-              {loading ? "..." : "Add to Friends"}
-            </button>
-          )}
+              <Image
+                src={friend.avatar_url || "/default-avatar.svg"}
+                alt={friend.display_name || friend.username}
+                width={52}
+                height={52}
+                className="h-[52px] w-[52px] rounded border border-[#6699cc] object-cover"
+              />
+              <span className="w-full truncate text-[10px] font-bold text-[#003366]">
+                {friend.display_name || friend.username}
+              </span>
+            </Link>
+          ))}
         </div>
-      )}
-
-      {friends.length === 0 && (
-        <p className="text-sm text-gray-500">No friends yet.</p>
-      )}
-
-      <div className="grid grid-cols-4 gap-3">
-        {friends.slice(0, 8).map((friend) => (
-          <Link
-            key={friend.id}
-            href={`/profile/${friend.username}`}
-            className="flex flex-col items-center gap-1 text-center no-underline hover:opacity-80"
-          >
-            <Image
-              src={friend.avatar_url || "/default-avatar.svg"}
-              alt={friend.display_name || friend.username}
-              width={60}
-              height={60}
-              className="h-[60px] w-[60px] rounded object-cover"
-            />
-            <span className="text-xs font-bold text-[#003366]">
-              {friend.display_name || friend.username}
-            </span>
-          </Link>
-        ))}
       </div>
     </div>
   );

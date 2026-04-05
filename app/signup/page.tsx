@@ -67,89 +67,104 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#c0c0d0]">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-[#003366]">MySpace</h1>
-          <p className="mt-2 text-gray-600">A place for friends.</p>
+    <div className="ms-stars-bg flex min-h-screen items-center justify-center bg-[#1a2a3a]">
+      <div className="w-full max-w-md px-4">
+        {/* Logo */}
+        <div className="mb-6 text-center">
+          <h1 className="text-5xl font-bold tracking-tight text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)]">
+            My<span className="text-[#ffcc00]">Space</span>
+          </h1>
+          <p className="mt-1 text-sm text-[#8aaccf]">a place for friends</p>
         </div>
 
-        <div className="rounded-lg border-2 border-[#003366] bg-white p-8 shadow-lg">
-          <h2 className="mb-6 text-center text-xl font-bold text-[#003366]">
-            Sign Up
-          </h2>
+        {/* Signup box */}
+        <div className="ms-panel overflow-hidden rounded">
+          <div className="ms-section-header text-center">
+            Create Your Account
+          </div>
+          <div className="p-6">
+            {error && (
+              <div className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-xs text-red-700">
+                {error}
+              </div>
+            )}
 
-          {error && (
-            <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-700">
-              {error}
+            <form onSubmit={handleSignup} className="space-y-3">
+              <div>
+                <label className="mb-1 block text-xs font-bold text-[#003366]">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-xs font-bold text-[#003366]">
+                  Pick a Username
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  placeholder="e.g. tom"
+                  className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-xs font-bold text-[#003366]">
+                  Display Name
+                </label>
+                <input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="e.g. Tom Anderson"
+                  className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-xs font-bold text-[#003366]">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="w-full rounded border border-[#6699cc] bg-[#f5f8fa] px-3 py-2 text-xs focus:border-[#003366] focus:outline-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="ms-btn-accent w-full rounded py-2 disabled:opacity-50"
+              >
+                {loading ? "Creating account..." : "Sign Up!"}
+              </button>
+            </form>
+
+            <div className="mt-4 border-t border-[#dde6ed] pt-3 text-center">
+              <span className="text-xs text-[#666]">Already a member? </span>
+              <Link href="/login" className="text-xs font-bold text-[#003366]">
+                Log In
+              </Link>
             </div>
-          )}
-
-          <form onSubmit={handleSignup} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-bold">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full rounded border border-gray-300 px-3 py-2 focus:border-[#003366] focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-bold">Username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                placeholder="e.g. tom"
-                className="w-full rounded border border-gray-300 px-3 py-2 focus:border-[#003366] focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-bold">
-                Display Name
-              </label>
-              <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="e.g. Tom Anderson"
-                className="w-full rounded border border-gray-300 px-3 py-2 focus:border-[#003366] focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-bold">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="w-full rounded border border-gray-300 px-3 py-2 focus:border-[#003366] focus:outline-none"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded bg-[#ff6600] py-2 font-bold text-white hover:bg-[#ff7722] disabled:opacity-50"
-            >
-              {loading ? "Creating account..." : "Sign Up!"}
-            </button>
-          </form>
-
-          <p className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="font-bold text-[#003366]">
-              Log In
-            </Link>
-          </p>
+          </div>
         </div>
+
+        <p className="mt-4 text-center text-[10px] text-[#5577aa]">
+          &copy; 2003-2026 MySpace Clone. All rights reserved.
+        </p>
       </div>
     </div>
   );

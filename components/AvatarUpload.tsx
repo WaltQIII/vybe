@@ -55,20 +55,23 @@ export default function AvatarUpload({
       <Image
         src={currentUrl || "/default-avatar.svg"}
         alt="Avatar"
-        width={80}
-        height={80}
-        className="rounded border-2 border-[#003366] object-cover"
+        width={72}
+        height={72}
+        className="rounded border-2 border-[#6699cc] object-cover shadow"
       />
-      <label className="cursor-pointer rounded bg-[#003366] px-3 py-2 text-sm font-bold text-white hover:bg-[#004488]">
-        {uploading ? "Uploading..." : "Change Photo"}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleUpload}
-          disabled={uploading}
-          className="hidden"
-        />
-      </label>
+      <div>
+        <label className="ms-btn-primary inline-block cursor-pointer rounded">
+          {uploading ? "Uploading..." : "Change Photo"}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleUpload}
+            disabled={uploading}
+            className="hidden"
+          />
+        </label>
+        <p className="mt-1 text-[10px] text-[#999]">Max 2MB. JPG, PNG, or GIF.</p>
+      </div>
     </div>
   );
 }
