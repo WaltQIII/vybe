@@ -4,6 +4,58 @@ import { createClient } from "@/lib/supabase";
 import Image from "next/image";
 import { useState } from "react";
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_DIMENSION = 800;
+const JPEG_QUALITY = 0.8;
+
+function compressImage(file: File): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.onload = () => {
+      let { width, height } = img;
+
+      if (width <= MAX_DIMENSION && height <= MAX_DIMENSION && file.size < 500 * 1024) {
+        // Already small enough, skip compression
+        resolve(file);
+        return;
+      }
+
+      // Scale down to fit within MAX_DIMENSION
+      if (width > height) {
+        if (width > MAX_DIMENSION) {
+          height = Math.round(height * (MAX_DIMENSION / width));
+          width = MAX_DIMENSION;
+        }
+      } else {
+        if (height > MAX_DIMENSION) {
+          width = Math.round(width * (MAX_DIMENSION / height));
+          height = MAX_DIMENSION;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Could not get canvas context"));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Compression failed"));
+        },
+        "image/jpeg",
+        JPEG_QUALITY
+      );
+    };
+    img.onerror = () => reject(new Error("Failed to load image"));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 interface AvatarUploadProps {
   userId: string;
   currentUrl: string | null;
@@ -22,31 +74,40 @@ export default function AvatarUpload({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      alert("File must be under 2MB");
+    if (file.size > MAX_FILE_SIZE) {
+      alert("File must be under 10MB");
       return;
     }
 
     setUploading(true);
 
-    const ext = file.name.split(".").pop();
-    const path = `${userId}/avatar.${ext}`;
+    try {
+      const compressed = await compressImage(file);
+      const path = `${userId}/avatar.jpg`;
 
-    const { error } = await supabase.storage
-      .from("avatars")
-      .upload(path, file, { upsert: true });
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(path, compressed, {
+          upsert: true,
+          contentType: "image/jpeg",
+        });
 
-    if (error) {
-      alert("Upload failed: " + error.message);
-      setUploading(false);
-      return;
+      if (error) {
+        alert("Upload failed: " + error.message);
+        setUploading(false);
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("avatars").getPublicUrl(path);
+
+      // Append cache-buster so the browser loads the new image
+      onUpload(publicUrl + "?v=" + Date.now());
+    } catch (err) {
+      alert("Image processing failed: " + (err as Error).message);
     }
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("avatars").getPublicUrl(path);
-
-    onUpload(publicUrl);
     setUploading(false);
   }
 
@@ -61,7 +122,7 @@ export default function AvatarUpload({
       />
       <div className="text-center sm:text-left">
         <label className="ms-btn-primary inline-block cursor-pointer rounded">
-          {uploading ? "Uploading..." : "Change Photo"}
+          {uploading ? "Compressing & uploading..." : "Change Photo"}
           <input
             type="file"
             accept="image/*"
@@ -70,7 +131,7 @@ export default function AvatarUpload({
             className="hidden"
           />
         </label>
-        <p className="mt-1 text-[10px] text-[#999]">Max 2MB. JPG, PNG, or GIF.</p>
+        <p className="mt-1 text-[10px] text-[#999]">Max 10MB. Auto-compressed to 800px.</p>
       </div>
     </div>
   );
