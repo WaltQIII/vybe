@@ -7,6 +7,7 @@ export interface Profile {
   mood: string | null;
   avatar_url: string | null;
   bg_color: string;
+  song_url: string | null;
   created_at: string;
 }
 

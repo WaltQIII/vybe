@@ -18,6 +18,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
   const [mood, setMood] = useState(profile.mood || "");
   const [bgColor, setBgColor] = useState(profile.bg_color || "#ffffff");
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
+  const [songUrl, setSongUrl] = useState(profile.song_url || "");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -38,6 +39,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         mood,
         bg_color: bgColor,
         avatar_url: avatarUrl || null,
+        song_url: songUrl || null,
       })
       .eq("id", profile.id);
 
@@ -139,6 +141,27 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
               style={{ backgroundColor: bgColor }}
             />
           </div>
+        </div>
+      </div>
+
+      <div className="ms-panel mt-3 overflow-hidden rounded sm:mt-4">
+        <div className="ms-section-header flex items-center gap-2">
+          <span>&#9835;</span> Profile Song
+        </div>
+        <div className="p-3 sm:p-4">
+          <label className="mb-1 block text-xs font-bold text-[#003366]">
+            YouTube or SoundCloud URL
+          </label>
+          <input
+            type="url"
+            value={songUrl}
+            onChange={(e) => setSongUrl(e.target.value)}
+            placeholder="https://youtube.com/watch?v=... or https://soundcloud.com/..."
+            className="ms-input"
+          />
+          <p className="mt-1 text-[10px] text-[#999]">
+            Paste a YouTube or SoundCloud link. It will autoplay when someone visits your profile.
+          </p>
         </div>
       </div>
 

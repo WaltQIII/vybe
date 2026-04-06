@@ -4,6 +4,7 @@ import ProfileCard from "@/components/ProfileCard";
 import CommentWall from "@/components/CommentWall";
 import TopFriends from "@/components/TopFriends";
 import ProfileViewCounter from "@/components/ProfileViewCounter";
+import ProfileSong from "@/components/ProfileSong";
 import ReportButton from "@/components/ReportButton";
 import BlockButton from "@/components/BlockButton";
 import Navbar from "@/components/Navbar";
@@ -195,6 +196,9 @@ export default async function ProfilePage({
               currentUserId={user?.id || null}
               isOwner={isOwner}
             />
+            {typedProfile.song_url && (
+              <ProfileSong songUrl={typedProfile.song_url} />
+            )}
             <TopFriends
               friends={friends}
               profileId={typedProfile.id}
