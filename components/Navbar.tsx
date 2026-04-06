@@ -4,12 +4,14 @@ import { createClient } from "@/lib/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import NotificationBell from "./NotificationBell";
 
 interface NavbarProps {
   username?: string | null;
+  userId?: string | null;
 }
 
-export default function Navbar({ username }: NavbarProps) {
+export default function Navbar({ username, userId }: NavbarProps) {
   const supabase = createClient();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -52,6 +54,7 @@ export default function Navbar({ username }: NavbarProps) {
           >
             Edit Profile
           </Link>
+          {userId && <NotificationBell userId={userId} />}
           <span className="mx-1 text-white/30">|</span>
           <button
             onClick={handleLogout}
@@ -61,35 +64,38 @@ export default function Navbar({ username }: NavbarProps) {
           </button>
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex h-9 w-9 items-center justify-center rounded hover:bg-white/15 sm:hidden"
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        {/* Mobile: bell + hamburger */}
+        <div className="flex items-center gap-1 sm:hidden">
+          {userId && <NotificationBell userId={userId} />}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="flex h-9 w-9 items-center justify-center rounded hover:bg-white/15"
+            aria-label="Toggle menu"
           >
-            {menuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {menuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu dropdown */}
@@ -118,6 +124,13 @@ export default function Navbar({ username }: NavbarProps) {
               className="rounded px-3 py-2.5 text-sm text-white no-underline hover:bg-white/15"
             >
               Edit Profile
+            </Link>
+            <Link
+              href="/notifications"
+              onClick={() => setMenuOpen(false)}
+              className="rounded px-3 py-2.5 text-sm text-white no-underline hover:bg-white/15"
+            >
+              Notifications
             </Link>
             <button
               onClick={handleLogout}

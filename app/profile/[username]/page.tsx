@@ -112,7 +112,7 @@ export default async function ProfilePage({
       className="min-h-screen"
       style={{ backgroundColor: typedProfile.bg_color || "#b4c8d8" }}
     >
-      {user && <Navbar username={currentUserProfile?.username} />}
+      {user && <Navbar username={currentUserProfile?.username} userId={user.id} />}
 
       <div className="mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-6">
         {/* Profile header banner */}
@@ -149,6 +149,7 @@ export default async function ProfilePage({
           <div className="md:col-span-2">
             <CommentWall
               profileId={typedProfile.id}
+              profileUsername={typedProfile.username}
               comments={comments || []}
               currentUserId={user?.id || null}
               isOwner={isOwner}

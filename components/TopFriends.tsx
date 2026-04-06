@@ -37,6 +37,11 @@ export default function TopFriends({
       from_user_id: currentUserId,
       to_user_id: profileId,
     });
+    await supabase.from("notifications").insert({
+      user_id: profileId,
+      type: "friend_request",
+      from_user_id: currentUserId,
+    });
     setLoading(false);
     router.refresh();
   }
@@ -62,6 +67,12 @@ export default function TopFriends({
       { user_id: currentUserId, friend_id: profileId },
       { user_id: profileId, friend_id: currentUserId },
     ]);
+    // Notify the requester that their request was accepted
+    await supabase.from("notifications").insert({
+      user_id: profileId,
+      type: "friend_accepted",
+      from_user_id: currentUserId,
+    });
     setLoading(false);
     router.refresh();
   }

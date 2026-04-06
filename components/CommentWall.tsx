@@ -8,6 +8,7 @@ import { useState } from "react";
 
 interface CommentWallProps {
   profileId: string;
+  profileUsername: string;
   comments: WallComment[];
   currentUserId: string | null;
   isOwner: boolean;
@@ -15,6 +16,7 @@ interface CommentWallProps {
 
 export default function CommentWall({
   profileId,
+  profileUsername,
   comments,
   currentUserId,
   isOwner,
@@ -34,6 +36,15 @@ export default function CommentWall({
       author_id: currentUserId,
       body: body.trim(),
     });
+    // Notify wall owner (if not self)
+    if (currentUserId !== profileId) {
+      await supabase.from("notifications").insert({
+        user_id: profileId,
+        type: "wall_comment",
+        from_user_id: currentUserId,
+        data: { profile_username: profileUsername },
+      });
+    }
     setBody("");
     setPosting(false);
     router.refresh();

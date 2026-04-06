@@ -39,7 +39,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#b4c8d8]">
-      <Navbar username={typedProfile?.username} />
+      <Navbar username={typedProfile?.username} userId={user.id} />
 
       <div className="mx-auto max-w-3xl px-3 py-4 sm:px-4 sm:py-6">
         {/* Welcome banner */}
