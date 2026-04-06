@@ -1,4 +1,3 @@
-import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { requireAuth, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import FeedItem from "@/components/FeedItem";
@@ -6,10 +5,9 @@ import type { Profile, WallComment } from "@/lib/types";
 import Link from "next/link";
 
 export default async function HomePage() {
-  const user = await requireAuth();
-  const supabase = await createServerSupabaseClient();
+  const { user, supabase } = await requireAuth();
 
-  const typedProfile = (await getProfile()) as Profile | null;
+  const typedProfile = (await getProfile(supabase, user)) as Profile | null;
 
   // Get friends list
   const { data: friendships } = await supabase

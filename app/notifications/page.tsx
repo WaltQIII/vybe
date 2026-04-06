@@ -1,13 +1,11 @@
-import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { requireAuth, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import NotificationsList from "@/components/NotificationsList";
 import type { Profile } from "@/lib/types";
 
 export default async function NotificationsPage() {
-  const user = await requireAuth();
-  const supabase = await createServerSupabaseClient();
-  const profile = (await getProfile()) as Profile | null;
+  const { user, supabase } = await requireAuth();
+  const profile = (await getProfile(supabase, user)) as Profile | null;
 
   const { data: notifications } = await supabase
     .from("notifications")
