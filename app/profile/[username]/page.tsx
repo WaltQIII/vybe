@@ -3,6 +3,7 @@ import { getUser } from "@/lib/auth";
 import ProfileCard from "@/components/ProfileCard";
 import CommentWall from "@/components/CommentWall";
 import TopFriends from "@/components/TopFriends";
+import ProfileViewCounter from "@/components/ProfileViewCounter";
 import Navbar from "@/components/Navbar";
 import { notFound } from "next/navigation";
 import type { Profile } from "@/lib/types";
@@ -97,6 +98,11 @@ export default async function ProfilePage({
           {/* Left column: Profile + Friends */}
           <div className="space-y-3 sm:space-y-4 md:col-span-1">
             <ProfileCard profile={typedProfile} />
+            <ProfileViewCounter
+              profileId={typedProfile.id}
+              currentUserId={user?.id || null}
+              isOwner={isOwner}
+            />
             <TopFriends
               friends={friends}
               profileId={typedProfile.id}
