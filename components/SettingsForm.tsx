@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase";
 import type { Profile } from "@/lib/types";
 import AvatarUpload from "./AvatarUpload";
+import DeleteAccountButton from "./DeleteAccountButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -168,6 +169,20 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         >
           View My Profile
         </button>
+      </div>
+
+      {/* Danger zone */}
+      <div className="ms-panel mt-6 overflow-hidden rounded border-red-300 sm:mt-8">
+        <div className="bg-gradient-to-r from-[#8b0000] to-[#cc3333] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white sm:text-xs">
+          Danger Zone
+        </div>
+        <div className="p-3 sm:p-4">
+          <p className="mb-3 text-xs text-[#666]">
+            Permanently delete your account and all associated data. This action
+            cannot be undone.
+          </p>
+          <DeleteAccountButton />
+        </div>
       </div>
     </form>
   );
