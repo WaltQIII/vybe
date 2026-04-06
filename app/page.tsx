@@ -5,34 +5,55 @@ import type { Profile, WallComment } from "@/lib/types";
 import Link from "next/link";
 
 export default async function HomePage() {
-  const { user, supabase } = await requireAuth();
-
-  const typedProfile = (await getProfile(supabase, user)) as Profile | null;
-
-  // Get friends list
-  const { data: friendships } = await supabase
-    .from("friendships")
-    .select("friend_id")
-    .eq("user_id", user.id);
-
-  const friendIds = friendships?.map((f) => f.friend_id) || [];
-
-  // Get recent wall comments involving friends (posted by or on friend's wall)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let user: any = { id: "" };
+  let typedProfile: Profile | null = null;
+  let friendIds: string[] = [];
   let feedComments: (WallComment & { profile?: Profile })[] = [];
 
-  if (friendIds.length > 0) {
-    const { data: comments } = await supabase
-      .from("wall_comments")
-      .select(
-        "*, author:profiles!wall_comments_author_id_fkey(*), profile:profiles!wall_comments_profile_id_fkey(*)"
-      )
-      .or(
-        `author_id.in.(${friendIds.join(",")}),profile_id.in.(${friendIds.join(",")})`
-      )
-      .order("created_at", { ascending: false })
-      .limit(50);
+  try {
+    console.log("[HomePage] step 1: requireAuth");
+    const auth = await requireAuth();
+    user = auth.user;
+    const supabase = auth.supabase;
+    console.log("[HomePage] step 2: getProfile for user", user.id);
 
-    feedComments = (comments as (WallComment & { profile?: Profile })[]) || [];
+    typedProfile = (await getProfile(supabase, user)) as Profile | null;
+    console.log("[HomePage] step 3: profile result:", typedProfile?.username ?? "null");
+
+    // Get friends list
+    console.log("[HomePage] step 4: querying friendships");
+    const { data: friendships, error: friendshipsError } = await supabase
+      .from("friendships")
+      .select("friend_id")
+      .eq("user_id", user.id);
+    if (friendshipsError) console.error("[HomePage] friendships error:", JSON.stringify(friendshipsError));
+
+    friendIds = friendships?.map((f) => f.friend_id) || [];
+    console.log("[HomePage] step 5: friendIds count:", friendIds.length);
+
+    // Get recent wall comments involving friends
+    if (friendIds.length > 0) {
+      console.log("[HomePage] step 6: querying wall_comments");
+      const { data: comments, error: commentsError } = await supabase
+        .from("wall_comments")
+        .select(
+          "*, author:profiles!wall_comments_author_id_fkey(*), profile:profiles!wall_comments_profile_id_fkey(*)"
+        )
+        .or(
+          `author_id.in.(${friendIds.join(",")}),profile_id.in.(${friendIds.join(",")})`
+        )
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (commentsError) console.error("[HomePage] comments error:", JSON.stringify(commentsError));
+
+      feedComments = (comments as (WallComment & { profile?: Profile })[]) || [];
+    }
+    console.log("[HomePage] step 7: all data fetched, rendering");
+  } catch (err) {
+    console.error("[HomePage] CAUGHT ERROR:", err instanceof Error ? err.message : String(err));
+    console.error("[HomePage] ERROR STACK:", err instanceof Error ? err.stack : "no stack");
+    throw err;
   }
 
   return (
