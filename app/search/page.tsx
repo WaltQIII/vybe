@@ -1,3 +1,4 @@
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { requireAuth, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import type { Profile } from "@/lib/types";
@@ -9,9 +10,10 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  const { user, supabase } = await requireAuth();
-  const profile = (await getProfile(supabase, user)) as Profile | null;
+  const user = await requireAuth();
+  const profile = (await getProfile()) as Profile | null;
   const { q } = await searchParams;
+  const supabase = await createServerSupabaseClient();
 
   let results: Profile[] = [];
   if (q && q.trim().length >= 2) {

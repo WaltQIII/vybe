@@ -5,9 +5,9 @@ import { redirect } from "next/navigation";
 import type { Profile } from "@/lib/types";
 
 export default async function SettingsPage() {
-  const { user, supabase } = await requireAuth();
+  const user = await requireAuth();
 
-  const profile = await getProfile(supabase, user);
+  const profile = await getProfile();
   if (!profile) redirect("/signup");
 
   const typedProfile = profile as Profile;

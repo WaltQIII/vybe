@@ -1,6 +1,5 @@
 import { createServerSupabaseClient } from "./supabase-server";
 import { redirect } from "next/navigation";
-import type { SupabaseClient, User } from "@supabase/supabase-js";
 
 export async function getUser() {
   const supabase = await createServerSupabaseClient();
@@ -10,19 +9,11 @@ export async function getUser() {
   return user;
 }
 
-export async function getProfile(
-  existingClient?: SupabaseClient,
-  existingUser?: User
-) {
-  const supabase = existingClient ?? (await createServerSupabaseClient());
-
-  let user = existingUser ?? null;
-  if (!user) {
-    const {
-      data: { user: fetchedUser },
-    } = await supabase.auth.getUser();
-    user = fetchedUser;
-  }
+export async function getProfile() {
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) return null;
 
@@ -55,10 +46,7 @@ export async function getProfile(
 }
 
 export async function requireAuth() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
   if (!user) redirect("/login");
-  return { user, supabase };
+  return user;
 }

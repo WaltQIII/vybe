@@ -1,3 +1,4 @@
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { requireAuth, getProfile } from "@/lib/auth";
 import { isAdmin } from "@/lib/admin";
 import Navbar from "@/components/Navbar";
@@ -6,11 +7,12 @@ import { redirect } from "next/navigation";
 import type { Profile } from "@/lib/types";
 
 export default async function AdminPage() {
-  const { user, supabase } = await requireAuth();
+  const user = await requireAuth();
 
   if (!isAdmin(user.id)) redirect("/");
 
-  const profile = (await getProfile(supabase, user)) as Profile | null;
+  const profile = (await getProfile()) as Profile | null;
+  const supabase = await createServerSupabaseClient();
 
   const { data: reports } = await supabase
     .from("reports")
