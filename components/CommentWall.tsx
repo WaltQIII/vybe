@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase";
 import type { WallComment } from "@/lib/types";
 import Image from "next/image";
+import ReportButton from "./ReportButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -126,6 +127,13 @@ export default function CommentWall({
                     >
                       [x]
                     </button>
+                  )}
+                  {currentUserId && currentUserId !== comment.author_id && (
+                    <ReportButton
+                      reporterId={currentUserId}
+                      reportedUserId={comment.author_id}
+                      reportedCommentId={comment.id}
+                    />
                   )}
                 </div>
                 <p className="mt-1 break-words text-xs text-[#333] sm:text-sm">{comment.body}</p>
