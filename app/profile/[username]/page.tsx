@@ -57,16 +57,47 @@ export default async function ProfilePage({
     friends = (data as Profile[]) || [];
   }
 
-  // Check if current user is already a friend (for add/remove button)
+  // Check friendship status and pending requests
   let isFriend = false;
+  let pendingRequest: "sent" | "received" | null = null;
+  let requestId: string | null = null;
+
   if (user && !isOwner) {
-    const { data } = await supabase
+    const { data: friendship } = await supabase
       .from("friendships")
       .select("id")
       .eq("user_id", user.id)
       .eq("friend_id", typedProfile.id)
       .single();
-    isFriend = !!data;
+    isFriend = !!friendship;
+
+    if (!isFriend) {
+      // Check for pending request I sent
+      const { data: sentReq } = await supabase
+        .from("friend_requests")
+        .select("id")
+        .eq("from_user_id", user.id)
+        .eq("to_user_id", typedProfile.id)
+        .eq("status", "pending")
+        .single();
+      if (sentReq) {
+        pendingRequest = "sent";
+        requestId = sentReq.id;
+      } else {
+        // Check for pending request they sent me
+        const { data: recvReq } = await supabase
+          .from("friend_requests")
+          .select("id")
+          .eq("from_user_id", typedProfile.id)
+          .eq("to_user_id", user.id)
+          .eq("status", "pending")
+          .single();
+        if (recvReq) {
+          pendingRequest = "received";
+          requestId = recvReq.id;
+        }
+      }
+    }
   }
 
   // Get wall comments
@@ -109,6 +140,8 @@ export default async function ProfilePage({
               currentUserId={user?.id || null}
               isOwner={isOwner}
               isFriend={isFriend}
+              pendingRequest={pendingRequest}
+              requestId={requestId}
             />
           </div>
 

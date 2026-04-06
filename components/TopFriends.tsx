@@ -13,6 +13,8 @@ interface TopFriendsProps {
   currentUserId: string | null;
   isOwner: boolean;
   isFriend: boolean;
+  pendingRequest: "sent" | "received" | null;
+  requestId: string | null;
 }
 
 export default function TopFriends({
@@ -21,18 +23,56 @@ export default function TopFriends({
   currentUserId,
   isOwner,
   isFriend,
+  pendingRequest,
+  requestId,
 }: TopFriendsProps) {
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
-  async function handleAddFriend() {
+  async function handleSendRequest() {
     if (!currentUserId) return;
     setLoading(true);
-    await supabase.from("friendships").insert({
-      user_id: currentUserId,
-      friend_id: profileId,
+    await supabase.from("friend_requests").insert({
+      from_user_id: currentUserId,
+      to_user_id: profileId,
     });
+    setLoading(false);
+    router.refresh();
+  }
+
+  async function handleCancelRequest() {
+    if (!requestId) return;
+    setLoading(true);
+    await supabase.from("friend_requests").delete().eq("id", requestId);
+    setLoading(false);
+    router.refresh();
+  }
+
+  async function handleAcceptRequest() {
+    if (!requestId || !currentUserId) return;
+    setLoading(true);
+    // Accept the request
+    await supabase
+      .from("friend_requests")
+      .update({ status: "accepted" })
+      .eq("id", requestId);
+    // Create bidirectional friendships
+    await supabase.from("friendships").insert([
+      { user_id: currentUserId, friend_id: profileId },
+      { user_id: profileId, friend_id: currentUserId },
+    ]);
+    setLoading(false);
+    router.refresh();
+  }
+
+  async function handleDeclineRequest() {
+    if (!requestId) return;
+    setLoading(true);
+    await supabase
+      .from("friend_requests")
+      .update({ status: "declined" })
+      .eq("id", requestId);
     setLoading(false);
     router.refresh();
   }
@@ -40,11 +80,22 @@ export default function TopFriends({
   async function handleRemoveFriend() {
     if (!currentUserId) return;
     setLoading(true);
+    // Remove both directions
     await supabase
       .from("friendships")
       .delete()
       .eq("user_id", currentUserId)
       .eq("friend_id", profileId);
+    await supabase
+      .from("friendships")
+      .delete()
+      .eq("user_id", profileId)
+      .eq("friend_id", currentUserId);
+    // Clean up any accepted request
+    await supabase
+      .from("friend_requests")
+      .delete()
+      .or(`and(from_user_id.eq.${currentUserId},to_user_id.eq.${profileId}),and(from_user_id.eq.${profileId},to_user_id.eq.${currentUserId})`);
     setLoading(false);
     router.refresh();
   }
@@ -55,24 +106,49 @@ export default function TopFriends({
         <span>&#9829;</span> Top Friends ({friends.length}/8)
       </div>
       <div className="p-3 sm:p-4">
-        {/* Add/Remove friend button for visitors */}
+        {/* Friend action buttons for visitors */}
         {currentUserId && !isOwner && (
-          <div className="mb-3">
+          <div className="mb-3 space-y-2">
             {isFriend ? (
               <button
                 onClick={handleRemoveFriend}
                 disabled={loading}
                 className="w-full rounded border border-red-300 bg-red-50 px-3 py-2.5 text-xs text-red-600 hover:bg-red-100 disabled:opacity-50 sm:py-1.5"
               >
-                {loading ? "..." : "- Remove from Friends"}
+                {loading ? "..." : "- Remove Friend"}
               </button>
+            ) : pendingRequest === "sent" ? (
+              <button
+                onClick={handleCancelRequest}
+                disabled={loading}
+                className="w-full rounded border border-gray-300 bg-gray-50 px-3 py-2.5 text-xs text-gray-600 hover:bg-gray-100 disabled:opacity-50 sm:py-1.5"
+              >
+                {loading ? "..." : "Cancel Request"}
+              </button>
+            ) : pendingRequest === "received" ? (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAcceptRequest}
+                  disabled={loading}
+                  className="ms-btn-accent flex-1 rounded disabled:opacity-50"
+                >
+                  {loading ? "..." : "Accept"}
+                </button>
+                <button
+                  onClick={handleDeclineRequest}
+                  disabled={loading}
+                  className="flex-1 rounded border border-gray-300 bg-gray-50 px-3 py-2.5 text-xs text-gray-600 hover:bg-gray-100 disabled:opacity-50 sm:py-1.5"
+                >
+                  {loading ? "..." : "Decline"}
+                </button>
+              </div>
             ) : (
               <button
-                onClick={handleAddFriend}
+                onClick={handleSendRequest}
                 disabled={loading}
                 className="ms-btn-accent w-full rounded disabled:opacity-50"
               >
-                {loading ? "..." : "+ Add to Friends"}
+                {loading ? "..." : "+ Send Friend Request"}
               </button>
             )}
           </div>
