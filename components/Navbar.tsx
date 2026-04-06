@@ -54,6 +54,15 @@ export default function Navbar({ username, userId }: NavbarProps) {
           >
             Edit Profile
           </Link>
+          <Link
+            href="/search"
+            className="rounded px-2 py-1.5 text-white no-underline hover:bg-white/15"
+            aria-label="Search"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </Link>
           {userId && <NotificationBell userId={userId} />}
           <span className="mx-1 text-white/30">|</span>
           <button
@@ -124,6 +133,13 @@ export default function Navbar({ username, userId }: NavbarProps) {
               className="rounded px-3 py-2.5 text-sm text-white no-underline hover:bg-white/15"
             >
               Edit Profile
+            </Link>
+            <Link
+              href="/search"
+              onClick={() => setMenuOpen(false)}
+              className="rounded px-3 py-2.5 text-sm text-white no-underline hover:bg-white/15"
+            >
+              Find People
             </Link>
             <Link
               href="/notifications"
