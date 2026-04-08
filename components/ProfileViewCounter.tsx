@@ -15,31 +15,38 @@ export default function ProfileViewCounter({
   isOwner,
 }: ProfileViewCounterProps) {
   const [count, setCount] = useState<number | null>(null);
-  const supabase = createClient();
 
   useEffect(() => {
+    let cancelled = false;
+    const supabase = createClient();
+
     async function recordAndFetch() {
-      // Record view if logged in and not viewing own profile
-      if (currentUserId && !isOwner) {
-        await supabase
+      try {
+        // Record view if logged in and not viewing own profile
+        if (currentUserId && !isOwner) {
+          await supabase
+            .from("profile_views")
+            .upsert(
+              { profile_id: profileId, viewer_id: currentUserId },
+              { onConflict: "profile_id,viewer_id" }
+            );
+        }
+
+        // Fetch total unique view count
+        const { count: viewCount } = await supabase
           .from("profile_views")
-          .upsert(
-            { profile_id: profileId, viewer_id: currentUserId },
-            { onConflict: "profile_id,viewer_id" }
-          );
+          .select("*", { count: "exact", head: true })
+          .eq("profile_id", profileId);
+
+        if (!cancelled) setCount(viewCount ?? 0);
+      } catch {
+        // Ignore errors on unmounted component or network failures
       }
-
-      // Fetch total unique view count
-      const { count: viewCount } = await supabase
-        .from("profile_views")
-        .select("*", { count: "exact", head: true })
-        .eq("profile_id", profileId);
-
-      setCount(viewCount ?? 0);
     }
 
     recordAndFetch();
-  }, [profileId, currentUserId, isOwner, supabase]);
+    return () => { cancelled = true; };
+  }, [profileId, currentUserId, isOwner]);
 
   if (count === null) return null;
 

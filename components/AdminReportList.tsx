@@ -30,8 +30,10 @@ export default function AdminReportList({ reports }: AdminReportListProps) {
   );
 
   async function updateStatus(reportId: string, status: string) {
-    await supabase.from("reports").update({ status }).eq("id", reportId);
-    router.refresh();
+    try {
+      await supabase.from("reports").update({ status }).eq("id", reportId);
+      router.refresh();
+    } catch { /* ignore */ }
   }
 
   return (

@@ -14,18 +14,21 @@ export default function DeleteAccountButton() {
     if (confirmText !== "DELETE") return;
     setStep("deleting");
 
-    // Delete profile (cascades to friendships, comments, etc.)
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (user) {
-      await supabase.from("profiles").delete().eq("id", user.id);
+      if (user) {
+        await supabase.from("profiles").delete().eq("id", user.id);
+      }
+
+      await supabase.auth.signOut();
+      router.push("/login");
+      router.refresh();
+    } catch {
+      setStep("idle");
     }
-
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
   }
 
   if (step === "idle") {

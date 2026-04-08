@@ -25,14 +25,15 @@ export default function ReportButton({
   async function handleSubmit() {
     if (!reason.trim()) return;
     setLoading(true);
-    await supabase.from("reports").insert({
-      reporter_id: reporterId,
-      reported_user_id: reportedUserId || null,
-      reported_comment_id: reportedCommentId || null,
-      reason: reason.trim(),
-    });
-    setSubmitted(true);
-    setLoading(false);
+    try {
+      await supabase.from("reports").insert({
+        reporter_id: reporterId,
+        reported_user_id: reportedUserId || null,
+        reported_comment_id: reportedCommentId || null,
+        reason: reason.trim(),
+      });
+      setSubmitted(true);
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   if (submitted) {

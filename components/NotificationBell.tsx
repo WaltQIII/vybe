@@ -12,15 +12,20 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
     const supabase = createClient();
 
     async function fetchCount() {
-      const { count } = await supabase
-        .from("notifications")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", userId)
-        .eq("read", false);
-      setUnreadCount(count ?? 0);
+      try {
+        const { count } = await supabase
+          .from("notifications")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", userId)
+          .eq("read", false);
+        if (!cancelled) setUnreadCount(count ?? 0);
+      } catch {
+        // Ignore errors on unmounted component or network failures
+      }
     }
 
     fetchCount();
@@ -38,12 +43,13 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
           filter: `user_id=eq.${userId}`,
         },
         () => {
-          setUnreadCount((prev) => prev + 1);
+          if (!cancelled) setUnreadCount((prev) => prev + 1);
         }
       )
       .subscribe();
 
     return () => {
+      cancelled = true;
       supabase.removeChannel(channel);
     };
   }, [userId]);

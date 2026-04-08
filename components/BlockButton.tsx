@@ -22,23 +22,25 @@ export default function BlockButton({
   async function handleBlock() {
     if (!confirm("Are you sure you want to block this user? They won't be able to view your profile or comment on your wall.")) return;
     setLoading(true);
-    await supabase.from("blocks").insert({
-      blocker_id: currentUserId,
-      blocked_id: targetUserId,
-    });
-    setLoading(false);
-    router.refresh();
+    try {
+      await supabase.from("blocks").insert({
+        blocker_id: currentUserId,
+        blocked_id: targetUserId,
+      });
+      router.refresh();
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   async function handleUnblock() {
     setLoading(true);
-    await supabase
-      .from("blocks")
-      .delete()
-      .eq("blocker_id", currentUserId)
-      .eq("blocked_id", targetUserId);
-    setLoading(false);
-    router.refresh();
+    try {
+      await supabase
+        .from("blocks")
+        .delete()
+        .eq("blocker_id", currentUserId)
+        .eq("blocked_id", targetUserId);
+      router.refresh();
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   return isBlocked ? (

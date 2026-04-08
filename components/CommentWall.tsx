@@ -32,28 +32,37 @@ export default function CommentWall({
     if (!body.trim() || !currentUserId) return;
 
     setPosting(true);
-    await supabase.from("wall_comments").insert({
-      profile_id: profileId,
-      author_id: currentUserId,
-      body: body.trim(),
-    });
-    // Notify wall owner (if not self)
-    if (currentUserId !== profileId) {
-      await supabase.from("notifications").insert({
-        user_id: profileId,
-        type: "wall_comment",
-        from_user_id: currentUserId,
-        data: { profile_username: profileUsername },
+    try {
+      await supabase.from("wall_comments").insert({
+        profile_id: profileId,
+        author_id: currentUserId,
+        body: body.trim(),
       });
+      // Notify wall owner (if not self)
+      if (currentUserId !== profileId) {
+        await supabase.from("notifications").insert({
+          user_id: profileId,
+          type: "wall_comment",
+          from_user_id: currentUserId,
+          data: { profile_username: profileUsername },
+        });
+      }
+      setBody("");
+      router.refresh();
+    } catch {
+      // Silently handle network errors
+    } finally {
+      setPosting(false);
     }
-    setBody("");
-    setPosting(false);
-    router.refresh();
   }
 
   async function handleDelete(commentId: string) {
-    await supabase.from("wall_comments").delete().eq("id", commentId);
-    router.refresh();
+    try {
+      await supabase.from("wall_comments").delete().eq("id", commentId);
+      router.refresh();
+    } catch {
+      // Silently handle network errors
+    }
   }
 
   return (

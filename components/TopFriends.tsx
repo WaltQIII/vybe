@@ -33,82 +33,82 @@ export default function TopFriends({
   async function handleSendRequest() {
     if (!currentUserId) return;
     setLoading(true);
-    await supabase.from("friend_requests").insert({
-      from_user_id: currentUserId,
-      to_user_id: profileId,
-    });
-    await supabase.from("notifications").insert({
-      user_id: profileId,
-      type: "friend_request",
-      from_user_id: currentUserId,
-    });
-    setLoading(false);
-    router.refresh();
+    try {
+      await supabase.from("friend_requests").insert({
+        from_user_id: currentUserId,
+        to_user_id: profileId,
+      });
+      await supabase.from("notifications").insert({
+        user_id: profileId,
+        type: "friend_request",
+        from_user_id: currentUserId,
+      });
+      router.refresh();
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   async function handleCancelRequest() {
     if (!requestId) return;
     setLoading(true);
-    await supabase.from("friend_requests").delete().eq("id", requestId);
-    setLoading(false);
-    router.refresh();
+    try {
+      await supabase.from("friend_requests").delete().eq("id", requestId);
+      router.refresh();
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   async function handleAcceptRequest() {
     if (!requestId || !currentUserId) return;
     setLoading(true);
-    // Accept the request
-    await supabase
-      .from("friend_requests")
-      .update({ status: "accepted" })
-      .eq("id", requestId);
-    // Create bidirectional friendships
-    await supabase.from("friendships").insert([
-      { user_id: currentUserId, friend_id: profileId },
-      { user_id: profileId, friend_id: currentUserId },
-    ]);
-    // Notify the requester that their request was accepted
-    await supabase.from("notifications").insert({
-      user_id: profileId,
-      type: "friend_accepted",
-      from_user_id: currentUserId,
-    });
-    setLoading(false);
-    router.refresh();
+    try {
+      await supabase
+        .from("friend_requests")
+        .update({ status: "accepted" })
+        .eq("id", requestId);
+      await supabase.from("friendships").insert([
+        { user_id: currentUserId, friend_id: profileId },
+        { user_id: profileId, friend_id: currentUserId },
+      ]);
+      await supabase.from("notifications").insert({
+        user_id: profileId,
+        type: "friend_accepted",
+        from_user_id: currentUserId,
+      });
+      router.refresh();
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   async function handleDeclineRequest() {
     if (!requestId) return;
     setLoading(true);
-    await supabase
-      .from("friend_requests")
-      .update({ status: "declined" })
-      .eq("id", requestId);
-    setLoading(false);
-    router.refresh();
+    try {
+      await supabase
+        .from("friend_requests")
+        .update({ status: "declined" })
+        .eq("id", requestId);
+      router.refresh();
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   async function handleRemoveFriend() {
     if (!currentUserId) return;
     setLoading(true);
-    // Remove both directions
-    await supabase
-      .from("friendships")
-      .delete()
-      .eq("user_id", currentUserId)
-      .eq("friend_id", profileId);
-    await supabase
-      .from("friendships")
-      .delete()
-      .eq("user_id", profileId)
-      .eq("friend_id", currentUserId);
-    // Clean up any accepted request
-    await supabase
-      .from("friend_requests")
-      .delete()
-      .or(`and(from_user_id.eq.${currentUserId},to_user_id.eq.${profileId}),and(from_user_id.eq.${profileId},to_user_id.eq.${currentUserId})`);
-    setLoading(false);
-    router.refresh();
+    try {
+      await supabase
+        .from("friendships")
+        .delete()
+        .eq("user_id", currentUserId)
+        .eq("friend_id", profileId);
+      await supabase
+        .from("friendships")
+        .delete()
+        .eq("user_id", profileId)
+        .eq("friend_id", currentUserId);
+      await supabase
+        .from("friend_requests")
+        .delete()
+        .or(`and(from_user_id.eq.${currentUserId},to_user_id.eq.${profileId}),and(from_user_id.eq.${profileId},to_user_id.eq.${currentUserId})`);
+      router.refresh();
+    } catch { /* ignore */ } finally { setLoading(false); }
   }
 
   return (
