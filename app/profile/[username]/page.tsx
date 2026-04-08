@@ -241,7 +241,7 @@ export default async function ProfilePage({
             </ComponentErrorBoundary>
             {typedProfile.song_url && (
               <ComponentErrorBoundary name="ProfileSong">
-                <ProfileSong songUrl={typedProfile.song_url} />
+                <ProfileSong songUrl={typedProfile.song_url} displayName={typedProfile.display_name || typedProfile.username} />
               </ComponentErrorBoundary>
             )}
             <ComponentErrorBoundary name="TopFriends">
