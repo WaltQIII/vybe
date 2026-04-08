@@ -10,9 +10,10 @@ interface NotificationBellProps {
 
 export default function NotificationBell({ userId }: NotificationBellProps) {
   const [unreadCount, setUnreadCount] = useState(0);
-  const supabase = createClient();
 
   useEffect(() => {
+    const supabase = createClient();
+
     async function fetchCount() {
       const { count } = await supabase
         .from("notifications")
@@ -24,9 +25,10 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
 
     fetchCount();
 
-    // Subscribe to new notifications
+    // Use a unique channel name per mount to avoid stale channel reuse
+    const channelName = `notifications-${userId}-${Date.now()}`;
     const channel = supabase
-      .channel("notifications")
+      .channel(channelName)
       .on(
         "postgres_changes",
         {
@@ -44,7 +46,7 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId, supabase]);
+  }, [userId]);
 
   return (
     <Link
