@@ -184,11 +184,31 @@ export default async function ProfilePage({
     .eq("profile_id", typedProfile.id)
     .order("created_at", { ascending: false });
 
+  const hasBgImage =
+    (typedProfile.bg_type === "preset" || typedProfile.bg_type === "custom_url") &&
+    typedProfile.bg_image_url;
+
   return (
     <div
-      className="min-h-screen"
-      style={{ backgroundColor: typedProfile.bg_color || "#b4c8d8" }}
+      className="relative min-h-screen"
+      style={{
+        backgroundColor: typedProfile.bg_color || "#b4c8d8",
+        ...(hasBgImage
+          ? {
+              backgroundImage: `url(${typedProfile.bg_image_url})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+          : {}),
+      }}
     >
+      {/* Dark overlay for readability over background images */}
+      {hasBgImage && (
+        <div className="pointer-events-none absolute inset-0 bg-black/30" />
+      )}
+
+      <div className="relative z-10">
       {user && (
         <ComponentErrorBoundary name="Navbar">
           <Navbar username={currentUserProfile?.username} userId={user.id} />
@@ -274,6 +294,7 @@ export default async function ProfilePage({
         <div className="mt-4 text-center text-[10px] text-[#6688aa] sm:mt-6">
           &copy; 2026 Vybe. All rights reserved.
         </div>
+      </div>
       </div>
     </div>
   );

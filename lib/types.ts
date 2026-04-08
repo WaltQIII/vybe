@@ -10,6 +10,8 @@ export interface Profile {
   song_url: string | null;
   city: string | null;
   country: string | null;
+  bg_type: string;
+  bg_image_url: string | null;
   created_at: string;
 }
 

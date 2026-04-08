@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase";
 import type { Profile } from "@/lib/types";
 import AvatarUpload from "./AvatarUpload";
+import BackgroundPicker from "./BackgroundPicker";
 import DeleteAccountButton from "./DeleteAccountButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,6 +18,8 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
   const [aboutMe, setAboutMe] = useState(profile.about_me || "");
   const [mood, setMood] = useState(profile.mood || "");
   const [bgColor, setBgColor] = useState(profile.bg_color || "#ffffff");
+  const [bgType, setBgType] = useState(profile.bg_type || "color");
+  const [bgImageUrl, setBgImageUrl] = useState(profile.bg_image_url || "");
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
   const [songUrl, setSongUrl] = useState(profile.song_url || "");
   const [city, setCity] = useState(profile.city || "");
@@ -44,6 +47,8 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         song_url: songUrl || null,
         city: city || null,
         country: country || null,
+        bg_type: bgType,
+        bg_image_url: bgImageUrl || null,
       })
       .eq("id", profile.id);
 
@@ -153,27 +158,14 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         </div>
       </div>
 
-      <div className="ms-panel mt-3 overflow-hidden rounded sm:mt-4">
-        <div className="ms-section-header">Customize Profile</div>
-        <div className="p-3 sm:p-4">
-          <label className="mb-1 block text-xs font-bold text-[#003366]">
-            Background Color
-          </label>
-          <div className="flex items-center gap-3">
-            <input
-              type="color"
-              value={bgColor}
-              onChange={(e) => setBgColor(e.target.value)}
-              className="h-10 w-14 cursor-pointer rounded border border-[#6699cc] sm:h-8 sm:w-12"
-            />
-            <span className="text-xs text-[#666]">{bgColor}</span>
-            <div
-              className="h-10 flex-1 rounded border border-[#6699cc] sm:h-8"
-              style={{ backgroundColor: bgColor }}
-            />
-          </div>
-        </div>
-      </div>
+      <BackgroundPicker
+        bgType={bgType}
+        bgColor={bgColor}
+        bgImageUrl={bgImageUrl}
+        onBgTypeChange={setBgType}
+        onBgColorChange={setBgColor}
+        onBgImageUrlChange={setBgImageUrl}
+      />
 
       <div className="ms-panel mt-3 overflow-hidden rounded sm:mt-4">
         <div className="ms-section-header flex items-center gap-2">
