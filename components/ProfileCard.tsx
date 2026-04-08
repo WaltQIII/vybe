@@ -29,6 +29,12 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
         </h1>
         <p className="text-center text-xs text-[#6688aa]">@{profile.username}</p>
 
+        {(profile.city || profile.country) && (
+          <p className="mt-1 text-center text-xs text-[#555]">
+            &#128205; {[profile.city, profile.country].filter(Boolean).join(", ")}
+          </p>
+        )}
+
         {profile.mood && (
           <div className="mx-auto mt-2 max-w-fit rounded-full bg-[#eef3f7] px-3 py-1 text-center text-xs italic text-[#336699]">
             {profile.mood}

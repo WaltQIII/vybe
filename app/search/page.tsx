@@ -21,7 +21,7 @@ export default async function SearchPage({
     const { data } = await supabase
       .from("profiles")
       .select("*")
-      .or(`username.ilike.%${query}%,display_name.ilike.%${query}%`)
+      .or(`username.ilike.%${query}%,display_name.ilike.%${query}%,city.ilike.%${query}%,country.ilike.%${query}%`)
       .neq("id", user.id)
       .limit(20);
     results = (data as Profile[]) || [];
@@ -83,6 +83,11 @@ export default async function SearchPage({
                         {r.display_name || r.username}
                       </p>
                       <p className="text-xs text-[#6688aa]">@{r.username}</p>
+                      {(r.city || r.country) && (
+                        <p className="text-[10px] text-[#555]">
+                          &#128205; {[r.city, r.country].filter(Boolean).join(", ")}
+                        </p>
+                      )}
                     </div>
                     {r.mood && (
                       <span className="hidden text-[10px] italic text-[#999] sm:block">

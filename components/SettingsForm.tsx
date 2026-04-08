@@ -19,6 +19,8 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
   const [bgColor, setBgColor] = useState(profile.bg_color || "#ffffff");
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
   const [songUrl, setSongUrl] = useState(profile.song_url || "");
+  const [city, setCity] = useState(profile.city || "");
+  const [country, setCountry] = useState(profile.country || "");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -40,6 +42,8 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         bg_color: bgColor,
         avatar_url: avatarUrl || null,
         song_url: songUrl || null,
+        city: city || null,
+        country: country || null,
       })
       .eq("id", profile.id);
 
@@ -105,6 +109,33 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
               placeholder='e.g. "feeling creative ✨"'
               className="ms-input"
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1 block text-xs font-bold text-[#003366]">
+                City
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="e.g. Lehigh Acres"
+                className="ms-input"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-bold text-[#003366]">
+                State / Country
+              </label>
+              <input
+                type="text"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                placeholder="e.g. Florida"
+                className="ms-input"
+              />
+            </div>
           </div>
         </div>
       </div>

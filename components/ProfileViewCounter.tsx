@@ -51,8 +51,8 @@ export default function ProfileViewCounter({
   if (count === null) return null;
 
   return (
-    <div className="text-center text-[10px] text-[#999]">
-      Visited <span className="font-bold text-[#336699]">{count}</span>{" "}
+    <div className="text-center text-xs text-[#555]">
+      Visited <span className="font-bold text-[#003366]">{count}</span>{" "}
       {count === 1 ? "time" : "times"}
     </div>
   );

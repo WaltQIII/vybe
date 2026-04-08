@@ -8,6 +8,8 @@ export interface Profile {
   avatar_url: string | null;
   bg_color: string;
   song_url: string | null;
+  city: string | null;
+  country: string | null;
   created_at: string;
 }
 
