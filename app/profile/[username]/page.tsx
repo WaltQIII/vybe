@@ -10,7 +10,37 @@ import BlockButton from "@/components/BlockButton";
 import Navbar from "@/components/Navbar";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import type { Profile } from "@/lib/types";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}): Promise<Metadata> {
+  const { username } = await params;
+  const supabase = await createServerSupabaseClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, username, bio, mood")
+    .eq("username", username)
+    .single();
+
+  if (!profile) return { title: "Profile Not Found" };
+
+  const name = profile.display_name || profile.username;
+  const description = profile.bio || profile.mood || `Check out ${name}'s Vybe profile.`;
+
+  return {
+    title: `${name}'s Vybe`,
+    description,
+    openGraph: {
+      title: `${name}'s Vybe`,
+      description,
+      type: "profile",
+    },
+  };
+}
 
 export default async function ProfilePage({
   params,

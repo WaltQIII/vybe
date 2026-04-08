@@ -1,14 +1,20 @@
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { requireAuth, getProfile } from "@/lib/auth";
+import { getUser, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import FeedItem from "@/components/FeedItem";
+import LandingPage from "@/components/LandingPage";
 import type { Profile, WallComment } from "@/lib/types";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const user = await requireAuth();
+  const user = await getUser();
+
+  if (!user) {
+    return <LandingPage />;
+  }
+
   const supabase = await createServerSupabaseClient();
 
   const typedProfile = (await getProfile()) as Profile | null;

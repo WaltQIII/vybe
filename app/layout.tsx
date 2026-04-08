@@ -18,8 +18,25 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Vybe",
-  description: "Express yourself. Connect for real.",
+  title: {
+    default: "Vybe - Express Yourself. Connect for Real.",
+    template: "%s | Vybe",
+  },
+  description:
+    "Your profile, your way. Customize your page with colors, music, and vibes. Add friends, leave comments on walls, and make your corner of the internet feel like you.",
+  openGraph: {
+    title: "Vybe - Express Yourself. Connect for Real.",
+    description:
+      "Customize your profile with colors, music, and vibes. Connect with friends the way the internet used to be.",
+    siteName: "Vybe",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Vybe - Express Yourself. Connect for Real.",
+    description:
+      "Customize your profile with colors, music, and vibes. Connect with friends the way the internet used to be.",
+  },
 };
 
 export default function RootLayout({
