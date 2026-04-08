@@ -8,6 +8,7 @@ import ProfileSong from "@/components/ProfileSong";
 import ReportButton from "@/components/ReportButton";
 import BlockButton from "@/components/BlockButton";
 import Navbar from "@/components/Navbar";
+import ComponentErrorBoundary from "@/components/ComponentErrorBoundary";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -186,7 +187,11 @@ export default async function ProfilePage({
       className="min-h-screen"
       style={{ backgroundColor: typedProfile.bg_color || "#b4c8d8" }}
     >
-      {user && <Navbar username={currentUserProfile?.username} userId={user.id} />}
+      {user && (
+        <ComponentErrorBoundary name="Navbar">
+          <Navbar username={currentUserProfile?.username} userId={user.id} />
+        </ComponentErrorBoundary>
+      )}
 
       <div className="mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-6">
         {/* Profile header banner */}
@@ -202,16 +207,20 @@ export default async function ProfilePage({
             </div>
             {user && !isOwner && (
               <div className="flex items-center gap-3">
-                <ReportButton
-                  reporterId={user.id}
-                  reportedUserId={typedProfile.id}
-                  label="Report Profile"
-                />
-                <BlockButton
-                  currentUserId={user.id}
-                  targetUserId={typedProfile.id}
-                  isBlocked={hasBlockedOwner}
-                />
+                <ComponentErrorBoundary name="ReportButton">
+                  <ReportButton
+                    reporterId={user.id}
+                    reportedUserId={typedProfile.id}
+                    label="Report Profile"
+                  />
+                </ComponentErrorBoundary>
+                <ComponentErrorBoundary name="BlockButton">
+                  <BlockButton
+                    currentUserId={user.id}
+                    targetUserId={typedProfile.id}
+                    isBlocked={hasBlockedOwner}
+                  />
+                </ComponentErrorBoundary>
               </div>
             )}
           </div>
@@ -221,34 +230,42 @@ export default async function ProfilePage({
           {/* Left column */}
           <div className="space-y-3 sm:space-y-4 md:col-span-1">
             <ProfileCard profile={typedProfile} />
-            <ProfileViewCounter
-              profileId={typedProfile.id}
-              currentUserId={user?.id || null}
-              isOwner={isOwner}
-            />
+            <ComponentErrorBoundary name="ProfileViewCounter">
+              <ProfileViewCounter
+                profileId={typedProfile.id}
+                currentUserId={user?.id || null}
+                isOwner={isOwner}
+              />
+            </ComponentErrorBoundary>
             {typedProfile.song_url && (
-              <ProfileSong songUrl={typedProfile.song_url} />
+              <ComponentErrorBoundary name="ProfileSong">
+                <ProfileSong songUrl={typedProfile.song_url} />
+              </ComponentErrorBoundary>
             )}
-            <TopFriends
-              friends={friends}
-              profileId={typedProfile.id}
-              currentUserId={user?.id || null}
-              isOwner={isOwner}
-              isFriend={isFriend}
-              pendingRequest={pendingRequest}
-              requestId={requestId}
-            />
+            <ComponentErrorBoundary name="TopFriends">
+              <TopFriends
+                friends={friends}
+                profileId={typedProfile.id}
+                currentUserId={user?.id || null}
+                isOwner={isOwner}
+                isFriend={isFriend}
+                pendingRequest={pendingRequest}
+                requestId={requestId}
+              />
+            </ComponentErrorBoundary>
           </div>
 
           {/* Right column */}
           <div className="md:col-span-2">
-            <CommentWall
-              profileId={typedProfile.id}
-              profileUsername={typedProfile.username}
-              comments={comments || []}
-              currentUserId={user?.id || null}
-              isOwner={isOwner}
-            />
+            <ComponentErrorBoundary name="CommentWall">
+              <CommentWall
+                profileId={typedProfile.id}
+                profileUsername={typedProfile.username}
+                comments={comments || []}
+                currentUserId={user?.id || null}
+                isOwner={isOwner}
+              />
+            </ComponentErrorBoundary>
           </div>
         </div>
 

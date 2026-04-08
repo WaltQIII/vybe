@@ -1,6 +1,7 @@
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { getUser, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
+import ComponentErrorBoundary from "@/components/ComponentErrorBoundary";
 import FeedItem from "@/components/FeedItem";
 import LandingPage from "@/components/LandingPage";
 import type { Profile, WallComment } from "@/lib/types";
@@ -47,7 +48,9 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#b4c8d8]">
-      <Navbar username={typedProfile?.username} userId={user.id} />
+      <ComponentErrorBoundary name="Navbar">
+        <Navbar username={typedProfile?.username} userId={user.id} />
+      </ComponentErrorBoundary>
 
       <div className="mx-auto max-w-3xl px-3 py-4 sm:px-4 sm:py-6">
         {/* Welcome banner */}

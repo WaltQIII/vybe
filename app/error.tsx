@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 export default function Error({
   error,
   reset,
@@ -7,6 +9,17 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    // Log full error details for debugging
+    console.error("[VYBE_ERROR_BOUNDARY]", {
+      timestamp: new Date().toISOString(),
+      message: error.message,
+      name: error.name,
+      digest: error.digest,
+      stack: error.stack,
+    });
+  }, [error]);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#b4c8d8] px-4">
       <div className="ms-panel w-full max-w-md overflow-hidden rounded">
