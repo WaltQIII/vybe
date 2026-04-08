@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import InstallPrompt from "@/components/InstallPrompt";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,6 +17,7 @@ const geistMono = Geist_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#2a5f8f",
 };
 
 export const metadata: Metadata = {
@@ -24,6 +27,11 @@ export const metadata: Metadata = {
   },
   description:
     "Your profile, your way. Customize your page with colors, music, and vibes. Add friends, leave comments on walls, and make your corner of the internet feel like you.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Vybe",
+  },
   openGraph: {
     title: "Vybe - Express Yourself. Connect for Real.",
     description:
@@ -37,6 +45,9 @@ export const metadata: Metadata = {
     description:
       "Customize your profile with colors, music, and vibes. Connect with friends the way the internet used to be.",
   },
+  icons: {
+    apple: "/icons/icon-152x152.png",
+  },
 };
 
 export default function RootLayout({
@@ -49,7 +60,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <InstallPrompt />
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }
