@@ -35,13 +35,16 @@ export default function ProfileSong({ songUrl }: ProfileSongProps) {
       <div className="p-2">
         {youtubeId ? (
           <iframe
-            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&loop=1&playlist=${youtubeId}`}
+            src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&playsinline=1`}
             width="100%"
-            height="80"
-            allow="autoplay; encrypted-media"
+            height="152"
+            allow="encrypted-media"
             allowFullScreen
+            // @ts-expect-error -- playsinline is valid for iOS but not in React types
+            playsInline
             className="rounded"
             title="Profile Song"
+            style={{ border: 0 }}
           />
         ) : soundcloudUrl ? (
           <iframe
@@ -49,9 +52,10 @@ export default function ProfileSong({ songUrl }: ProfileSongProps) {
             height="166"
             scrolling="no"
             frameBorder="no"
-            allow="autoplay"
-            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(soundcloudUrl)}&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false`}
+            allow="encrypted-media"
+            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(soundcloudUrl)}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false`}
             title="Profile Song"
+            style={{ border: 0 }}
           />
         ) : (
           <div className="p-2 text-center text-[10px] text-[#999]">

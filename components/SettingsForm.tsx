@@ -191,7 +191,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
             className="ms-input"
           />
           <p className="mt-1 text-[10px] text-[#999]">
-            Paste a YouTube or SoundCloud link. It will autoplay when someone visits your profile.
+            Paste a YouTube or SoundCloud URL (e.g. https://youtube.com/watch?v=... or https://soundcloud.com/artist/track). It will embed as a player on your profile.
           </p>
         </div>
       </div>
