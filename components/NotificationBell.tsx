@@ -24,33 +24,16 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
           .eq("read", false);
         if (!cancelled) setUnreadCount(count ?? 0);
       } catch {
-        // Ignore errors on unmounted component or network failures
+        // Ignore network failures or unmounted component
       }
     }
 
     fetchCount();
-
-    // Use a unique channel name per mount to avoid stale channel reuse
-    const channelName = `notifications-${userId}-${Date.now()}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${userId}`,
-        },
-        () => {
-          if (!cancelled) setUnreadCount((prev) => prev + 1);
-        }
-      )
-      .subscribe();
+    const interval = setInterval(fetchCount, 30000);
 
     return () => {
       cancelled = true;
-      supabase.removeChannel(channel);
+      clearInterval(interval);
     };
   }, [userId]);
 
