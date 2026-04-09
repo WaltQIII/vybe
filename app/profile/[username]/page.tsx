@@ -7,6 +7,8 @@ import ProfileViewCounter from "@/components/ProfileViewCounter";
 import ProfileSong from "@/components/ProfileSong";
 import ReportButton from "@/components/ReportButton";
 import BlockButton from "@/components/BlockButton";
+import SendMessageButton from "@/components/SendMessageButton";
+import Blinkies from "@/components/Blinkies";
 import Navbar from "@/components/Navbar";
 import ComponentErrorBoundary from "@/components/ComponentErrorBoundary";
 import { notFound } from "next/navigation";
@@ -229,6 +231,7 @@ export default async function ProfilePage({
             </div>
             {user && !isOwner && (
               <div className="flex items-center gap-3">
+                <SendMessageButton username={typedProfile.username} />
                 <ComponentErrorBoundary name="ReportButton">
                   <ReportButton
                     reporterId={user.id}
@@ -275,6 +278,9 @@ export default async function ProfilePage({
                 requestId={requestId}
               />
             </ComponentErrorBoundary>
+            {typedProfile.blinkies && typedProfile.blinkies.length > 0 && (
+              <Blinkies urls={typedProfile.blinkies} />
+            )}
           </div>
 
           {/* Right column */}

@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase";
 import type { Profile } from "@/lib/types";
 import AvatarUpload from "./AvatarUpload";
 import BackgroundPicker from "./BackgroundPicker";
+import BlinkiePicker from "./BlinkiePicker";
 import DeleteAccountButton from "./DeleteAccountButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,6 +25,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
   const [songUrl, setSongUrl] = useState(profile.song_url || "");
   const [city, setCity] = useState(profile.city || "");
   const [country, setCountry] = useState(profile.country || "");
+  const [blinkies, setBlinkies] = useState<string[]>(profile.blinkies || []);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -49,6 +51,7 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         country: country || null,
         bg_type: bgType,
         bg_image_url: bgImageUrl || null,
+        blinkies,
       })
       .eq("id", profile.id);
 
@@ -166,6 +169,8 @@ export default function SettingsForm({ profile }: SettingsFormProps) {
         onBgColorChange={setBgColor}
         onBgImageUrlChange={setBgImageUrl}
       />
+
+      <BlinkiePicker blinkies={blinkies} onChange={setBlinkies} />
 
       <div className="ms-panel mt-3 overflow-hidden rounded sm:mt-4">
         <div className="ms-section-header flex items-center gap-2">

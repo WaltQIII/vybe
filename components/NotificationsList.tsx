@@ -48,6 +48,10 @@ export default function NotificationsList({
             message = "accepted your friend request";
             href = `/profile/${fromUser?.username || ""}`;
             break;
+          case "direct_message":
+            message = `sent you a message${notif.data.preview ? `: "${notif.data.preview}"` : ""}`;
+            href = `/messages/${fromUser?.username || ""}`;
+            break;
         }
 
         return (

@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import MessageBadge from "./MessageBadge";
 import NotificationBell from "./NotificationBell";
 
 interface NavbarProps {
@@ -63,6 +64,7 @@ export default function Navbar({ username, userId }: NavbarProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </Link>
+          {userId && <MessageBadge userId={userId} />}
           {userId && <NotificationBell userId={userId} />}
           <span className="mx-1 text-white/30">|</span>
           <button
@@ -75,6 +77,7 @@ export default function Navbar({ username, userId }: NavbarProps) {
 
         {/* Mobile: bell + hamburger */}
         <div className="flex items-center gap-1 sm:hidden">
+          {userId && <MessageBadge userId={userId} />}
           {userId && <NotificationBell userId={userId} />}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -147,6 +150,13 @@ export default function Navbar({ username, userId }: NavbarProps) {
               className="rounded px-3 py-2.5 text-sm text-white no-underline hover:bg-white/15"
             >
               Notifications
+            </Link>
+            <Link
+              href="/messages"
+              onClick={() => setMenuOpen(false)}
+              className="rounded px-3 py-2.5 text-sm text-white no-underline hover:bg-white/15"
+            >
+              Messages
             </Link>
             <button
               onClick={handleLogout}
