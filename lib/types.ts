@@ -52,3 +52,24 @@ export interface Message {
   created_at: string;
   sender?: Profile;
 }
+
+export interface Post {
+  id: string;
+  user_id: string;
+  caption: string | null;
+  image_url: string | null;
+  created_at: string;
+  author?: Profile;
+  like_count?: number;
+  comment_count?: number;
+  liked_by_user?: boolean;
+}
+
+export interface PostComment {
+  id: string;
+  post_id: string;
+  user_id: string;
+  body: string;
+  created_at: string;
+  author?: Profile;
+}

@@ -1,23 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import ThemeProvider from "@/components/ThemeProvider";
 import InstallPrompt from "@/components/InstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
 });
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#2a5f8f",
+  themeColor: "#0f172a",
 };
 
 export const metadata: Metadata = {
@@ -56,13 +52,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <InstallPrompt />
+    <html lang="en" className={`${jakarta.variable} dark`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{const t=localStorage.getItem('vybe-theme')||'dark';document.documentElement.className=document.documentElement.className.replace(/light|dark/g,'')+' '+t}catch{}`,
+          }}
+        />
+      </head>
+      <body
+        className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--text)] transition-colors"
+        style={{ fontFamily: "var(--font-jakarta), system-ui, sans-serif" }}
+      >
+        <ThemeProvider>
+          {children}
+          <InstallPrompt />
+        </ThemeProvider>
         <ServiceWorkerRegister />
       </body>
     </html>

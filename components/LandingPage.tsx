@@ -2,24 +2,19 @@ import Link from "next/link";
 
 export default function LandingPage() {
   return (
-    <div className="ms-stars-bg flex min-h-screen flex-col bg-[#1a2a3a]">
+    <div className="flex min-h-screen flex-col bg-[var(--bg)]">
       {/* Header */}
-      <nav className="border-b border-[#1a4f7f] bg-gradient-to-b from-[#4a86b8] to-[#2a5f8f] text-white shadow-md">
+      <nav className="border-b border-[var(--border)] bg-[var(--bg-card)]/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <span className="text-2xl font-bold tracking-tight text-white drop-shadow-[1px_1px_0px_rgba(0,0,0,0.3)] sm:text-3xl">
-            Vy<span className="text-[#ffcc00]">be</span>
+          <span className="text-xl font-extrabold tracking-tight">
+            <span className="vb-gradient-text">Vy</span>
+            <span className="text-[#f59e0b]">be</span>
           </span>
           <div className="flex items-center gap-2">
-            <Link
-              href="/login"
-              className="rounded px-4 py-1.5 text-sm text-white no-underline hover:bg-white/15"
-            >
+            <Link href="/login" className="vb-btn vb-btn-ghost rounded-lg !text-sm">
               Log In
             </Link>
-            <Link
-              href="/signup"
-              className="rounded bg-[#ff6600] px-4 py-1.5 text-sm font-bold text-white no-underline hover:bg-[#ff7722]"
-            >
+            <Link href="/signup" className="vb-btn vb-btn-accent rounded-lg !text-sm">
               Sign Up
             </Link>
           </div>
@@ -27,64 +22,53 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <main className="flex flex-1 flex-col items-center justify-center px-4 py-12 text-center">
-        <h1 className="text-5xl font-bold tracking-tight text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)] sm:text-7xl">
-          Vy<span className="text-[#ffcc00]">be</span>
+      <main className="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
+        <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl">
+          <span className="vb-gradient-text">Vy</span>
+          <span className="text-[#f59e0b]">be</span>
         </h1>
-        <p className="mt-2 text-sm text-[#8aaccf] sm:text-lg">
+        <p className="mt-3 text-base text-[var(--text-secondary)] sm:text-lg">
           express yourself. connect for real.
         </p>
-
-        <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-[#a0bdd4] sm:text-base">
-          Your profile, your way. Customize your page with colors, music, and
-          vibes. Add friends, leave comments on walls, and make your corner of
-          the internet feel like <em>you</em>.
+        <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
+          Your profile, your way. Customize your page with backgrounds, music,
+          and vibes. Add friends, share posts, and make your corner of the
+          internet feel like <em>you</em>.
         </p>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/signup"
-            className="rounded bg-[#ff6600] px-8 py-3 text-base font-bold text-white no-underline shadow-lg hover:bg-[#ff7722] sm:text-lg"
+            className="vb-btn vb-btn-primary rounded-xl !px-8 !py-3 !text-base shadow-lg"
           >
-            Create Your Vybe
+            Get Started
           </Link>
           <Link
             href="/login"
-            className="rounded border border-white/30 px-8 py-3 text-base text-white no-underline hover:bg-white/10 sm:text-lg"
+            className="vb-btn vb-btn-secondary rounded-xl !px-8 !py-3 !text-base"
           >
             Log In
           </Link>
         </div>
 
-        {/* Feature highlights */}
-        <div className="mx-auto mt-16 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
-          <div className="rounded border border-white/10 bg-white/5 p-5">
-            <div className="mb-2 text-2xl">&#127912;</div>
-            <h3 className="text-sm font-bold text-white">Custom Profiles</h3>
-            <p className="mt-1 text-xs text-[#8aaccf]">
-              Pick your colors, set a mood, add a profile song.
-            </p>
-          </div>
-          <div className="rounded border border-white/10 bg-white/5 p-5">
-            <div className="mb-2 text-2xl">&#128172;</div>
-            <h3 className="text-sm font-bold text-white">Comment Walls</h3>
-            <p className="mt-1 text-xs text-[#8aaccf]">
-              Leave messages on your friends&apos; walls like the old days.
-            </p>
-          </div>
-          <div className="rounded border border-white/10 bg-white/5 p-5">
-            <div className="mb-2 text-2xl">&#127911;</div>
-            <h3 className="text-sm font-bold text-white">Profile Songs</h3>
-            <p className="mt-1 text-xs text-[#8aaccf]">
-              Add a YouTube or SoundCloud track that plays when people visit.
-            </p>
-          </div>
+        {/* Features */}
+        <div className="mx-auto mt-20 grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3">
+          {[
+            ["&#127912;", "Custom Profiles", "Pick your colors, set a mood, add a profile song."],
+            ["&#128247;", "Photo Posts", "Share moments with a feed that feels like yours."],
+            ["&#127911;", "Profile Songs", "Add a track that plays when people visit your page."],
+          ].map(([icon, title, desc], i) => (
+            <div key={i} className="vb-card p-5 text-center">
+              <div className="mb-2 text-2xl" dangerouslySetInnerHTML={{ __html: icon }} />
+              <h3 className="text-sm font-bold text-[var(--text)]">{title}</h3>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">{desc}</p>
+            </div>
+          ))}
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="py-4 text-center text-[10px] text-[#5577aa]">
-        &copy; 2026 Vybe. All rights reserved.
+      <footer className="py-4 text-center text-xs text-[var(--text-muted)]">
+        &copy; 2026 Vybe
       </footer>
     </div>
   );

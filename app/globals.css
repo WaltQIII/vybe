@@ -1,164 +1,197 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "VybeFont";
-  src: local("Trebuchet MS"), local("Verdana"), local("Arial");
+/* Modern design tokens */
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f5f7fa;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border: #e5e7eb;
+  --border-hover: #d1d5db;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-soft: #eff6ff;
+  --orange: #f97316;
+  --orange-hover: #ea580c;
+  --gradient-start: #3b82f6;
+  --gradient-end: #8b5cf6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.03);
+  --radius: 12px;
 }
 
-:root {
-  --background: #b4c8d8;
-  --foreground: #000000;
-  --primary: #003366;
-  --primary-light: #336699;
-  --accent: #ff6600;
-  --accent-hover: #ff8833;
-  --myspace-blue: #003366;
-  --myspace-light-blue: #5f8ab8;
-  --myspace-orange: #ff6600;
-  --myspace-bg: #b4c8d8;
-  --myspace-panel: #dfe8ef;
-  --myspace-border: #6699cc;
+.dark {
+  --bg: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --border-hover: #475569;
+  --accent: #60a5fa;
+  --accent-hover: #3b82f6;
+  --accent-soft: rgba(96,165,250,0.1);
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.25);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-accent: var(--accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--myspace-blue) var(--myspace-panel);
+  scrollbar-color: var(--accent) var(--bg-secondary);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
   font-size: 14px;
   -webkit-text-size-adjust: 100%;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 a {
-  color: var(--primary);
+  color: var(--accent);
+  text-decoration: none;
 }
 a:hover {
-  text-decoration: underline;
-  color: var(--accent);
+  color: var(--accent-hover);
 }
 
-/* Vybe section headers */
-.ms-section-header {
-  background: linear-gradient(180deg, #4a86b8 0%, #2a5f8f 100%);
-  color: white;
-  font-weight: bold;
-  font-size: 11px;
+/* Modern card */
+.vb-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.vb-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Section header */
+.vb-header {
+  font-size: 13px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 6px 12px;
-  border: 1px solid #1a4f7f;
-}
-@media (min-width: 640px) {
-  .ms-section-header {
-    font-size: 12px;
-  }
+  color: var(--text-secondary);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
 }
 
-/* Vybe panels */
-.ms-panel {
-  border: 1px solid #6699cc;
-  background: white;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-/* Vybe buttons — mobile-friendly tap targets */
-.ms-btn-primary {
-  background: linear-gradient(180deg, #4a86b8 0%, #2a5f8f 100%);
-  color: white;
-  border: 1px solid #1a4f7f;
+/* Buttons */
+.vb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 8px 16px;
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: all 0.15s;
+  border: none;
 }
-.ms-btn-primary:hover {
-  background: linear-gradient(180deg, #5a96c8 0%, #3a6f9f 100%);
-}
-@media (min-width: 640px) {
-  .ms-btn-primary {
-    padding: 4px 14px;
-  }
-}
-
-.ms-btn-accent {
-  background: linear-gradient(180deg, #ff8833 0%, #ff6600 100%);
+.vb-btn-primary {
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
   color: white;
-  border: 1px solid #cc5500;
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
-.ms-btn-accent:hover {
-  background: linear-gradient(180deg, #ff9944 0%, #ff7711 100%);
+.vb-btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
-@media (min-width: 640px) {
-  .ms-btn-accent {
-    padding: 4px 14px;
-  }
+.vb-btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.vb-btn-secondary:hover {
+  border-color: var(--border-hover);
+  background: var(--border);
+}
+.vb-btn-accent {
+  background: var(--orange);
+  color: white;
+}
+.vb-btn-accent:hover {
+  background: var(--orange-hover);
+}
+.vb-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.vb-btn-ghost:hover {
+  background: var(--bg-secondary);
+  color: var(--text);
 }
 
-/* Mobile-friendly form inputs */
-.ms-input {
+/* Form inputs */
+.vb-input {
   width: 100%;
-  border-radius: 4px;
-  border: 1px solid #6699cc;
-  background-color: #f5f8fa;
-  padding: 10px 12px;
-  font-size: 16px; /* prevents iOS zoom */
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-secondary);
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 16px;
   outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ms-input:focus {
-  border-color: #003366;
+.vb-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 @media (min-width: 640px) {
-  .ms-input {
-    padding: 8px 12px;
-    font-size: 13px;
+  .vb-input {
+    padding: 8px 14px;
+    font-size: 14px;
   }
 }
 
-/* Marquee-style text animation */
-@keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
-.ms-marquee {
-  overflow: hidden;
-  white-space: nowrap;
-}
-.ms-marquee span {
-  display: inline-block;
-  animation: marquee 15s linear infinite;
+/* Gradient text */
+.vb-gradient-text {
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Blink text like the old days */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-.ms-blink {
-  animation: blink 1s step-end infinite;
+/* Badge */
+.vb-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--orange);
+  color: white;
 }
 
-/* Star background pattern */
+/* Backward compat aliases so old class names still work during migration */
+.ms-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+.ms-section-header { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 12px 16px; border-bottom: 1px solid var(--border); background: none; border-top: none; border-left: none; border-right: none; }
+.ms-btn-primary { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: white; border: none; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 8px; text-transform: none; letter-spacing: 0; transition: all 0.15s; }
+.ms-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); }
+.ms-btn-accent { background: var(--orange); color: white; border: none; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 8px; text-transform: none; letter-spacing: 0; transition: all 0.15s; }
+.ms-btn-accent:hover { background: var(--orange-hover); }
+.ms-input { width: 100%; border-radius: 8px; border: 1px solid var(--border); background-color: var(--bg-secondary); color: var(--text); padding: 10px 14px; font-size: 16px; outline: none; transition: border-color 0.15s; }
+.ms-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+@media (min-width: 640px) { .ms-input { padding: 8px 14px; font-size: 14px; } .ms-btn-primary, .ms-btn-accent { padding: 6px 14px; } }
+
+/* Star bg for landing page */
 .ms-stars-bg {
   background-image:
     radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 50%, transparent 50%),

@@ -7,9 +7,9 @@ import { useState } from "react";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -21,150 +21,77 @@ export default function SignupPage() {
     setError("");
 
     if (username.length < 3) {
-      setError("Username must be at least 3 characters");
+      setError("Username must be at least 3 characters.");
       setLoading(false);
       return;
     }
 
     if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      setError("Username can only contain letters, numbers, and underscores");
+      setError("Username can only contain letters, numbers, and underscores.");
       setLoading(false);
       return;
     }
 
-    // Check if username is taken
-    const { data: existing } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("username", username.toLowerCase())
-      .single();
-
-    if (existing) {
-      setError("That username is already taken!");
-      setLoading(false);
-      return;
-    }
-
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          username: username.toLowerCase(),
-          display_name: displayName || username,
-        },
-      },
+      options: { data: { username: username.toLowerCase(), display_name: displayName || username } },
     });
 
-    if (signUpError) {
-      setError(signUpError.message);
+    if (error) {
+      setError(error.message);
       setLoading(false);
       return;
     }
 
-    router.push("/settings");
-    router.refresh();
+    router.push("/login");
   }
 
   return (
-    <div className="ms-stars-bg flex min-h-screen items-center justify-center bg-[#1a2a3a] px-4 py-8">
-      <div className="w-full max-w-sm sm:max-w-md">
-        {/* Logo */}
-        <div className="mb-5 text-center sm:mb-6">
-          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)] sm:text-5xl">
-            Vy<span className="text-[#ffcc00]">be</span>
+    <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] px-4 py-8">
+      <div className="w-full max-w-sm">
+        <div className="mb-6 text-center">
+          <h1 className="text-4xl font-extrabold">
+            <span className="vb-gradient-text">Vy</span>
+            <span className="text-[#f59e0b]">be</span>
           </h1>
-          <p className="mt-1 text-xs text-[#8aaccf] sm:text-sm">express yourself. connect for real.</p>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">express yourself. connect for real.</p>
         </div>
 
-        {/* Signup box */}
-        <div className="ms-panel overflow-hidden rounded">
-          <div className="ms-section-header text-center">
-            Create Your Account
-          </div>
-          <div className="p-4 sm:p-6">
-            {error && (
-              <div className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-xs text-red-700">
-                {error}
-              </div>
-            )}
+        <div className="vb-card overflow-hidden p-6">
+          <h2 className="mb-4 text-center text-sm font-semibold text-[var(--text-secondary)]">Create Your Account</h2>
 
-            <form onSubmit={handleSignup} className="space-y-3">
-              <div>
-                <label className="mb-1 block text-xs font-bold text-[#003366]">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="ms-input"
-                />
-              </div>
+          {error && (
+            <div className="mb-4 rounded-lg bg-red-500/10 p-3 text-xs text-red-500">{error}</div>
+          )}
 
-              <div>
-                <label className="mb-1 block text-xs font-bold text-[#003366]">
-                  Pick a Username
-                </label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  placeholder="e.g. tom"
-                  className="ms-input"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-xs font-bold text-[#003366]">
-                  Display Name
-                </label>
-                <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="e.g. Tom Anderson"
-                  className="ms-input"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-xs font-bold text-[#003366]">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  className="ms-input"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="ms-btn-accent w-full rounded py-2.5 disabled:opacity-50 sm:py-2"
-              >
-                {loading ? "Creating account..." : "Sign Up!"}
-              </button>
-            </form>
-
-            <div className="mt-4 border-t border-[#dde6ed] pt-3 text-center">
-              <span className="text-xs text-[#666]">Already a member? </span>
-              <Link href="/login" className="text-xs font-bold text-[#003366]">
-                Log In
-              </Link>
+          <form onSubmit={handleSignup} className="space-y-4">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">Email</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="vb-input" />
             </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">Username</label>
+              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required placeholder="e.g. tom" className="vb-input" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">Display Name</label>
+              <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="e.g. Tom Anderson" className="vb-input" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">Password</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="vb-input" />
+            </div>
+            <button type="submit" disabled={loading} className="vb-btn vb-btn-accent w-full rounded-lg !py-2.5 disabled:opacity-50">
+              {loading ? "Creating..." : "Sign Up"}
+            </button>
+          </form>
+
+          <div className="mt-4 text-center text-xs text-[var(--text-muted)]">
+            Already a member?{" "}
+            <Link href="/login" className="font-semibold text-[var(--accent)]">Log In</Link>
           </div>
         </div>
-
-        <p className="mt-4 text-center text-[10px] text-[#5577aa]">
-          &copy; 2026 Vybe. All rights reserved.
-        </p>
       </div>
     </div>
   );

@@ -2,9 +2,10 @@ import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { getUser, getProfile } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import ComponentErrorBoundary from "@/components/ComponentErrorBoundary";
-import FeedItem from "@/components/FeedItem";
+import PostCard from "@/components/PostCard";
+import CreatePost from "@/components/CreatePost";
 import LandingPage from "@/components/LandingPage";
-import type { Profile, WallComment } from "@/lib/types";
+import type { Profile, Post } from "@/lib/types";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -17,119 +18,97 @@ export default async function HomePage() {
   }
 
   const supabase = await createServerSupabaseClient();
-
   const typedProfile = (await getProfile()) as Profile | null;
 
-  // Get friends list
-  const { data: friendships } = await supabase
-    .from("friendships")
-    .select("friend_id")
-    .eq("user_id", user.id);
+  // Get posts with author, like count, comment count, and whether current user liked
+  const { data: rawPosts } = await supabase
+    .from("posts")
+    .select("*, author:profiles!posts_user_id_fkey(*)")
+    .order("created_at", { ascending: false })
+    .limit(30);
 
-  const friendIds = friendships?.map((f) => f.friend_id) || [];
+  // Enrich with like/comment counts
+  const posts: Post[] = await Promise.all(
+    (rawPosts || []).map(async (post) => {
+      const { count: likeCount } = await supabase
+        .from("likes")
+        .select("*", { count: "exact", head: true })
+        .eq("post_id", post.id);
+      const { count: commentCount } = await supabase
+        .from("post_comments")
+        .select("*", { count: "exact", head: true })
+        .eq("post_id", post.id);
+      const { data: userLike } = await supabase
+        .from("likes")
+        .select("id")
+        .eq("post_id", post.id)
+        .eq("user_id", user.id)
+        .single();
 
-  // Get recent wall comments involving friends (posted by or on friend's wall)
-  let feedComments: (WallComment & { profile?: Profile })[] = [];
-
-  if (friendIds.length > 0) {
-    const { data: comments } = await supabase
-      .from("wall_comments")
-      .select(
-        "*, author:profiles!wall_comments_author_id_fkey(*), profile:profiles!wall_comments_profile_id_fkey(*)"
-      )
-      .or(
-        `author_id.in.(${friendIds.join(",")}),profile_id.in.(${friendIds.join(",")})`
-      )
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    feedComments = (comments as (WallComment & { profile?: Profile })[]) || [];
-  }
+      return {
+        ...post,
+        like_count: likeCount || 0,
+        comment_count: commentCount || 0,
+        liked_by_user: !!userLike,
+      } as Post;
+    })
+  );
 
   return (
-    <div className="min-h-screen bg-[#b4c8d8]">
+    <div className="min-h-screen bg-[var(--bg)]">
       <ComponentErrorBoundary name="Navbar">
         <Navbar username={typedProfile?.username} userId={user.id} />
       </ComponentErrorBoundary>
 
-      <div className="mx-auto max-w-3xl px-3 py-4 sm:px-4 sm:py-6">
-        {/* Welcome banner */}
-        <div className="ms-panel mb-4 overflow-hidden rounded sm:mb-6">
-          <div className="ms-section-header">
-            Welcome Back!
-          </div>
-          <div className="p-3 sm:p-5">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#4a86b8] to-[#2a5f8f] text-base font-bold text-white shadow-inner sm:h-12 sm:w-12 sm:text-lg">
-                {(typedProfile?.display_name || typedProfile?.username || "?")[0].toUpperCase()}
-              </div>
-              <div className="min-w-0">
-                <h1 className="truncate text-base font-bold text-[#003366] sm:text-xl">
-                  Hey there, {typedProfile?.display_name || typedProfile?.username || "friend"}!
-                </h1>
-                {typedProfile?.mood && (
-                  <p className="truncate text-xs italic text-[#666]">
-                    Mood: {typedProfile.mood}
-                  </p>
-                )}
-              </div>
+      <div className="mx-auto max-w-2xl px-4 py-6">
+        {/* Welcome */}
+        <div className="vb-card overflow-hidden p-5">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--gradient-start)] to-[var(--gradient-end)] text-lg font-bold text-white">
+              {(typedProfile?.display_name || typedProfile?.username || "?")[0].toUpperCase()}
             </div>
-
-            {typedProfile?.username && (
-              <div className="mt-3 flex flex-col gap-2 sm:mt-4 sm:flex-row">
-                <Link
-                  href={`/profile/${typedProfile.username}`}
-                  className="ms-btn-primary inline-block rounded text-center no-underline"
-                >
-                  View My Profile
-                </Link>
-                <Link
-                  href="/settings"
-                  className="ms-btn-primary inline-block rounded text-center no-underline"
-                >
-                  Edit Profile
-                </Link>
-              </div>
-            )}
+            <div className="min-w-0">
+              <h1 className="truncate text-lg font-bold text-[var(--text)]">
+                Hey, {typedProfile?.display_name || typedProfile?.username || "friend"}
+              </h1>
+              {typedProfile?.mood && (
+                <p className="truncate text-sm text-[var(--text-muted)]">{typedProfile.mood}</p>
+              )}
+            </div>
           </div>
+          {typedProfile?.username && (
+            <div className="mt-4 flex gap-2">
+              <Link href={`/profile/${typedProfile.username}`} className="vb-btn vb-btn-primary rounded-lg !text-xs no-underline">
+                View Profile
+              </Link>
+              <Link href="/discover" className="vb-btn vb-btn-secondary rounded-lg !text-xs no-underline">
+                Discover People
+              </Link>
+            </div>
+          )}
         </div>
 
-        {/* Friend Activity */}
-        <div className="ms-panel overflow-hidden rounded">
-          <div className="ms-section-header flex items-center gap-2">
-            <span>&#9733;</span> Friend Activity
-          </div>
-          <div className="p-3 sm:p-4">
-            {friendIds.length === 0 && (
-              <div className="rounded border border-dashed border-[#6699cc] bg-[#eef3f7] p-4 text-center sm:p-6">
-                <p className="text-xs text-[#336699] sm:text-sm">
-                  You haven&apos;t added any friends yet!
-                </p>
-                <p className="mt-1 text-[10px] text-[#666] sm:text-xs">
-                  Browse profiles and add friends to see their activity here.
-                </p>
-              </div>
-            )}
+        {/* Create Post */}
+        <div className="mt-4">
+          <CreatePost userId={user.id} />
+        </div>
 
-            {friendIds.length > 0 && feedComments.length === 0 && (
-              <div className="rounded border border-dashed border-[#6699cc] bg-[#eef3f7] p-4 text-center sm:p-6">
-                <p className="text-xs text-[#336699] sm:text-sm">
-                  No recent activity from your friends yet.
-                </p>
-              </div>
-            )}
+        {/* Posts Feed */}
+        <div className="mt-6">
+          <h2 className="mb-3 text-sm font-semibold text-[var(--text-secondary)]">Feed</h2>
 
-            <div className="space-y-2 sm:space-y-3">
-              {feedComments.map((comment) => (
-                <FeedItem key={comment.id} comment={comment} />
+          {posts.length === 0 ? (
+            <div className="vb-card p-6 text-center">
+              <p className="text-sm text-[var(--text-secondary)]">No posts yet.</p>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">Be the first to share something!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {posts.map((post) => (
+                <PostCard key={post.id} post={post} currentUserId={user.id} />
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-4 text-center text-[10px] text-[#6688aa] sm:mt-6">
-          &copy; 2026 Vybe. All rights reserved.
+          )}
         </div>
       </div>
     </div>
